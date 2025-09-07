@@ -1,10 +1,3 @@
-//
-//  MaraudersApp.swift
-//  Marauders
-//
-//  Created by tiscomacnb2486 on 6/9/2568 BE.
-//
-
 import SwiftUI
 
 @main
@@ -22,9 +15,10 @@ struct RootView: View {
 
     var body: some View {
         if isLogin {
+            RegisterView()
             //            MainTabView().environmentObject(authentication)
         } else {
-            ContentView()
+            LoginView()
 //            LoginSceneView().environmentObject(authentication)
         }
     }
