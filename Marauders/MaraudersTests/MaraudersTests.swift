@@ -1,13 +1,13 @@
 //
-//  MaraudersTests.swift
-//  MaraudersTests
+//  maraudersTests.swift
+//  maraudersTests
 //
-//  Created by tiscomacnb2486 on 6/9/2568 BE.
+//  Created by tiscomacnb2486 on 13/9/2568 BE.
 //
 
 import Testing
 
-struct MaraudersTests {
+struct maraudersTests {
 
     @Test func example() async throws {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.

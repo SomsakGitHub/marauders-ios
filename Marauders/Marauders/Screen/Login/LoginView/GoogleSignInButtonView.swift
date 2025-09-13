@@ -1,30 +1,31 @@
 import SwiftUI
-import GoogleSignIn
 import GoogleSignInSwift
 
 struct GoogleSignInButtonView: View {
+    @StateObject private var viewModel = AuthViewModel()
+
     var body: some View {
-        GoogleSignInButton {
-//            guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-//            let config = GIDConfiguration(clientID: clientID)
-            
-            guard let rootViewController = UIApplication.shared.windows.first?.rootViewController else { return }
-            
-            GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) { result, error in
-                if let error = error {
-                    print("Google login failed: \(error.localizedDescription)")
-                    return
+        VStack(spacing: 20) {
+            if viewModel.isLoggedIn {
+                Text("Welcome, \(viewModel.userEmail ?? "-")")
+                Button("Sign Out") {
+                    viewModel.signOut()
                 }
-                guard let user = result?.user,
-                      let idToken = user.idToken?.tokenString else { return }
-                
-                print("Google UserID: \(user.userID ?? "-"), Token: \(idToken)")
+                .buttonStyle(.borderedProminent)
+            } else {
+                GoogleSignInButton {
+                    Task {
+                        await viewModel.signInWithGoogle()
+                    }
+                }
+                .frame(height: 50)
+                .cornerRadius(8)
             }
         }
-        .frame(height: 50)
-        .cornerRadius(8)
+        .padding()
     }
 }
+
 
 
 #Preview {

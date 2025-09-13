@@ -1,13 +1,13 @@
 //
-//  MaraudersUITestsLaunchTests.swift
-//  MaraudersUITests
+//  maraudersUITestsLaunchTests.swift
+//  maraudersUITests
 //
-//  Created by tiscomacnb2486 on 6/9/2568 BE.
+//  Created by tiscomacnb2486 on 13/9/2568 BE.
 //
 
 import XCTest
 
-final class MaraudersUITestsLaunchTests: XCTestCase {
+final class maraudersUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

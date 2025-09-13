@@ -9,7 +9,7 @@ struct LoginView: View {
             Text("Login Page")
                 .font(.largeTitle)
 
-            AppleSignInButtonView()
+//            AppleSignInButtonView()
             GoogleSignInButtonView()
         }
         .padding()
