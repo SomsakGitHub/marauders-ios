@@ -1,5 +1,5 @@
-struct User: Codable {
-    let email: String
-    let password: String
-}
+//struct User: Codable {
+//    let email: String
+//    let password: String
+//}
 

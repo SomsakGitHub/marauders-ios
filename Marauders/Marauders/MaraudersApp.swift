@@ -15,7 +15,7 @@ struct RootView: View {
 
     var body: some View {
         if isLogin {
-            RegisterView()
+//            RegisterView()
             //            MainTabView().environmentObject(authentication)
         } else {
             LoginView()
