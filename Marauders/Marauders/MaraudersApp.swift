@@ -36,11 +36,9 @@ struct RootView: View {
 
     var body: some View {
         if isLogin {
-//            RegisterView()
-            //            MainTabView().environmentObject(authentication)
+//            MainTabView().environmentObject(authentication)
         } else {
-            LoginView()
-//            LoginSceneView().environmentObject(authentication)
+            MainTabView()
         }
     }
 }
