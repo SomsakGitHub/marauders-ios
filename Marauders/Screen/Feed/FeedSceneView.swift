@@ -33,7 +33,7 @@ struct FeedSceneView: View {
             playVideoOnChangeOfScrollPosition(postId: newValue)
         }
         .task {
-//            await viewModel.fetchData()
+            await viewModel.fetchData()
         }
     }
     
