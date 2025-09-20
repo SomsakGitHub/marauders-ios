@@ -6,11 +6,11 @@ struct ReactionButtons4View: View {
             Button {
                 
             } label: {
-                Image(uiImage: .actions)
-                    .resizable()
-                    .scaledToFit()
+                Image(systemName: "ellipsis.circle")
+                    .font(.largeTitle)
+                    .foregroundStyle(.white)
                     .frame(width: 60, height: 60)
-                    .clipShape(Circle())
+                    .background(Circle().fill(.ultraThinMaterial))
                     .overlay(
                         Circle()
                             .stroke(LinearGradient(gradient: Gradient(colors: [Color.red, Color.blue]), startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 2)

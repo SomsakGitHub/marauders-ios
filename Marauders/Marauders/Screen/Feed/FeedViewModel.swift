@@ -1,7 +1,8 @@
-import Foundation
+import Combine
 import CoreLocation
 
 class FeedViewModel: ObservableObject {
+    
     @Published var posts = [Post]()
 //    @Published var data: DataType?
     
@@ -10,10 +11,10 @@ class FeedViewModel: ObservableObject {
         Bundle.main.url(forResource: "fireworks", withExtension: "mp4")!,
         Bundle.main.url(forResource: "selfie", withExtension: "mp4")!,
         Bundle.main.url(forResource: "threeDancing", withExtension: "mp4")!,
-//        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-//        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-//        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-//        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+//        "https://cdn.zerojame.com/oneDancing.mp4",
+//        "https://cdn.zerojame.com/fireworks.mp4",
+//        "https://cdn.zerojame.com/selfie.mp4",
+//        "https://cdn.zerojame.com/threeDancing.mp4"
     ]
     
     init () {
@@ -21,11 +22,17 @@ class FeedViewModel: ObservableObject {
     }
     
     func fetchPosts() {
+        
         self.posts = [
-            .init(id: NSUUID().uuidString, videoUrl: videoUrls[0], latitude: 13.71646928950651, longitude: 100.52907189548483),
-            .init(id: NSUUID().uuidString, videoUrl: videoUrls[1], latitude: 1.0, longitude: 100.0),
-            .init(id: NSUUID().uuidString, videoUrl: videoUrls[2], latitude: 13.712090225574308, longitude: 100.53229446917453),
-            .init(id: NSUUID().uuidString, videoUrl: videoUrls[3], latitude: 1.0, longitude: 1.0),
+//            .init(id: NSUUID().uuidString, videoUrl: URL(string: videoUrls[0])! , latitude: 13.71646928950651, longitude: 100.52907189548483),
+//            .init(id: NSUUID().uuidString, videoUrl: URL(string: videoUrls[1])!, latitude: 1.0, longitude: 100.0),
+//            .init(id: NSUUID().uuidString, videoUrl: URL(string: videoUrls[2])!, latitude: 13.712090225574308, longitude: 100.53229446917453),
+//            .init(id: NSUUID().uuidString, videoUrl: URL(string: videoUrls[3])!, latitude: 1.0, longitude: 1.0),
+            
+                .init(id: NSUUID().uuidString, videoUrl: videoUrls[0] , latitude: 13.71646928950651, longitude: 100.52907189548483),
+                .init(id: NSUUID().uuidString, videoUrl: videoUrls[1], latitude: 1.0, longitude: 100.0),
+                .init(id: NSUUID().uuidString, videoUrl: videoUrls[2], latitude: 13.712090225574308, longitude: 100.53229446917453),
+                .init(id: NSUUID().uuidString, videoUrl: videoUrls[3], latitude: 1.0, longitude: 1.0),
         ]
         
 //        let latitude = AppSettings.shared.latitude
@@ -52,23 +59,21 @@ class FeedViewModel: ObservableObject {
         return loc1.distance(from: loc2) // คืนค่าเป็นเมตร
     }
     
-//    func fetchData() async {
-//        do {
-//            let url = URL(string: "https://jsonplaceholder.typicode.com/posts/1")!
-//            let (data, _) = try await URLSession.shared.data(from: url)
-//            let decodedData = try JSONDecoder().decode(DataType.self, from: data)
-//            DispatchQueue.main.async {
-//                self.data = decodedData
-//            }
-//        } catch {
-//            print("Error fetching data: \(error)")
-//        }
-//    }
+    
+    
+    func fetchData() async {
+        do {
+            self.posts = try await FeedService().fetchPosts()
+        } catch {
+            print("Failed to fetch posts:", error)
+            // Optionally, you could publish an error state here for the UI
+        }
+    }
 }
 
-struct DataType: Codable {
-    let id: Int
-    let userId: Int
-    let title: String
-    let body: String
-}
+//struct DataType: Codable {
+//    let id: Int
+//    let userId: Int
+//    let title: String
+//    let body: String
+//}

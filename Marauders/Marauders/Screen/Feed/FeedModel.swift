@@ -6,8 +6,4 @@ struct Post: Identifiable, Codable {
     let videoUrl: URL
     let latitude: Double
     let longitude: Double
-//    
-//    var location: CLLocation {
-//        CLLocation(latitude: latitude, longitude: longitude)
-//    }
 }

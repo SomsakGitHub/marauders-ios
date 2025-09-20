@@ -6,61 +6,54 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		06B0A5A02E75625C00E0AE25 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 06B0A59F2E75625C00E0AE25 /* GoogleSignIn */; };
-		06B0A5A22E75625C00E0AE25 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 06B0A5A12E75625C00E0AE25 /* GoogleSignInSwift */; };
-		06B0A5A52E7562C200E0AE25 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 06B0A5A42E7562C200E0AE25 /* FirebaseAuth */; };
-		06B0A5A72E7562C200E0AE25 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 06B0A5A62E7562C200E0AE25 /* FirebaseCore */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
-		06B0A5682E7560B900E0AE25 /* PBXContainerItemProxy */ = {
+		06DCE8C12E7E433900C2CC5B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 06B0A5512E7560B800E0AE25 /* Project object */;
+			containerPortal = 06DCE8A92E7E433800C2CC5B /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 06B0A5582E7560B800E0AE25;
+			remoteGlobalIDString = 06DCE8B02E7E433800C2CC5B;
 			remoteInfo = marauders;
 		};
-		06B0A5722E7560B900E0AE25 /* PBXContainerItemProxy */ = {
+		06DCE8CB2E7E433900C2CC5B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 06B0A5512E7560B800E0AE25 /* Project object */;
+			containerPortal = 06DCE8A92E7E433800C2CC5B /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 06B0A5582E7560B800E0AE25;
+			remoteGlobalIDString = 06DCE8B02E7E433800C2CC5B;
 			remoteInfo = marauders;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		06B0A5592E7560B800E0AE25 /* marauders.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = marauders.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		06B0A5672E7560B900E0AE25 /* maraudersTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = maraudersTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		06B0A5712E7560B900E0AE25 /* maraudersUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = maraudersUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		06DCE8B12E7E433800C2CC5B /* marauders.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = marauders.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		06DCE8C02E7E433900C2CC5B /* maraudersTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = maraudersTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		06DCE8CA2E7E433900C2CC5B /* maraudersUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = maraudersUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		06B0A5852E75618900E0AE25 /* Exceptions for "marauders" folder in "marauders" target */ = {
+		069502CE2E7EBC5400FD2B3F /* Exceptions for "marauders" folder in "marauders" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 06B0A5582E7560B800E0AE25 /* marauders */;
+			target = 06DCE8B02E7E433800C2CC5B /* marauders */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		06B0A55B2E7560B800E0AE25 /* marauders */ = {
+		06DCE8B32E7E433800C2CC5B /* marauders */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				06B0A5852E75618900E0AE25 /* Exceptions for "marauders" folder in "marauders" target */,
+				069502CE2E7EBC5400FD2B3F /* Exceptions for "marauders" folder in "marauders" target */,
 			);
 			path = marauders;
 			sourceTree = "<group>";
 		};
-		06B0A56A2E7560B900E0AE25 /* maraudersTests */ = {
+		06DCE8C32E7E433900C2CC5B /* maraudersTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = maraudersTests;
 			sourceTree = "<group>";
 		};
-		06B0A5742E7560B900E0AE25 /* maraudersUITests */ = {
+		06DCE8CD2E7E433900C2CC5B /* maraudersUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = maraudersUITests;
 			sourceTree = "<group>";
@@ -68,25 +61,21 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		06B0A5562E7560B800E0AE25 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				06B0A5A02E75625C00E0AE25 /* GoogleSignIn in Frameworks */,
-				06B0A5A52E7562C200E0AE25 /* FirebaseAuth in Frameworks */,
-				06B0A5A72E7562C200E0AE25 /* FirebaseCore in Frameworks */,
-				06B0A5A22E75625C00E0AE25 /* GoogleSignInSwift in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		06B0A5642E7560B900E0AE25 /* Frameworks */ = {
+		06DCE8AE2E7E433800C2CC5B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		06B0A56E2E7560B900E0AE25 /* Frameworks */ = {
+		06DCE8BD2E7E433900C2CC5B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		06DCE8C72E7E433900C2CC5B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -96,22 +85,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		06B0A5502E7560B800E0AE25 = {
+		06DCE8A82E7E433800C2CC5B = {
 			isa = PBXGroup;
 			children = (
-				06B0A55B2E7560B800E0AE25 /* marauders */,
-				06B0A56A2E7560B900E0AE25 /* maraudersTests */,
-				06B0A5742E7560B900E0AE25 /* maraudersUITests */,
-				06B0A55A2E7560B800E0AE25 /* Products */,
+				06DCE8B32E7E433800C2CC5B /* marauders */,
+				06DCE8C32E7E433900C2CC5B /* maraudersTests */,
+				06DCE8CD2E7E433900C2CC5B /* maraudersUITests */,
+				06DCE8B22E7E433800C2CC5B /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		06B0A55A2E7560B800E0AE25 /* Products */ = {
+		06DCE8B22E7E433800C2CC5B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				06B0A5592E7560B800E0AE25 /* marauders.app */,
-				06B0A5672E7560B900E0AE25 /* maraudersTests.xctest */,
-				06B0A5712E7560B900E0AE25 /* maraudersUITests.xctest */,
+				06DCE8B12E7E433800C2CC5B /* marauders.app */,
+				06DCE8C02E7E433900C2CC5B /* maraudersTests.xctest */,
+				06DCE8CA2E7E433900C2CC5B /* maraudersUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -119,142 +108,134 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		06B0A5582E7560B800E0AE25 /* marauders */ = {
+		06DCE8B02E7E433800C2CC5B /* marauders */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 06B0A57B2E7560B900E0AE25 /* Build configuration list for PBXNativeTarget "marauders" */;
+			buildConfigurationList = 06DCE8D42E7E433900C2CC5B /* Build configuration list for PBXNativeTarget "marauders" */;
 			buildPhases = (
-				06B0A5552E7560B800E0AE25 /* Sources */,
-				06B0A5562E7560B800E0AE25 /* Frameworks */,
-				06B0A5572E7560B800E0AE25 /* Resources */,
+				06DCE8AD2E7E433800C2CC5B /* Sources */,
+				06DCE8AE2E7E433800C2CC5B /* Frameworks */,
+				06DCE8AF2E7E433800C2CC5B /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				06B0A55B2E7560B800E0AE25 /* marauders */,
+				06DCE8B32E7E433800C2CC5B /* marauders */,
 			);
 			name = marauders;
 			packageProductDependencies = (
-				06B0A59F2E75625C00E0AE25 /* GoogleSignIn */,
-				06B0A5A12E75625C00E0AE25 /* GoogleSignInSwift */,
-				06B0A5A42E7562C200E0AE25 /* FirebaseAuth */,
-				06B0A5A62E7562C200E0AE25 /* FirebaseCore */,
 			);
 			productName = marauders;
-			productReference = 06B0A5592E7560B800E0AE25 /* marauders.app */;
+			productReference = 06DCE8B12E7E433800C2CC5B /* marauders.app */;
 			productType = "com.apple.product-type.application";
 		};
-		06B0A5662E7560B900E0AE25 /* maraudersTests */ = {
+		06DCE8BF2E7E433900C2CC5B /* maraudersTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 06B0A57E2E7560B900E0AE25 /* Build configuration list for PBXNativeTarget "maraudersTests" */;
+			buildConfigurationList = 06DCE8D72E7E433900C2CC5B /* Build configuration list for PBXNativeTarget "maraudersTests" */;
 			buildPhases = (
-				06B0A5632E7560B900E0AE25 /* Sources */,
-				06B0A5642E7560B900E0AE25 /* Frameworks */,
-				06B0A5652E7560B900E0AE25 /* Resources */,
+				06DCE8BC2E7E433900C2CC5B /* Sources */,
+				06DCE8BD2E7E433900C2CC5B /* Frameworks */,
+				06DCE8BE2E7E433900C2CC5B /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				06B0A5692E7560B900E0AE25 /* PBXTargetDependency */,
+				06DCE8C22E7E433900C2CC5B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				06B0A56A2E7560B900E0AE25 /* maraudersTests */,
+				06DCE8C32E7E433900C2CC5B /* maraudersTests */,
 			);
 			name = maraudersTests;
 			packageProductDependencies = (
 			);
 			productName = maraudersTests;
-			productReference = 06B0A5672E7560B900E0AE25 /* maraudersTests.xctest */;
+			productReference = 06DCE8C02E7E433900C2CC5B /* maraudersTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		06B0A5702E7560B900E0AE25 /* maraudersUITests */ = {
+		06DCE8C92E7E433900C2CC5B /* maraudersUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 06B0A5812E7560B900E0AE25 /* Build configuration list for PBXNativeTarget "maraudersUITests" */;
+			buildConfigurationList = 06DCE8DA2E7E433900C2CC5B /* Build configuration list for PBXNativeTarget "maraudersUITests" */;
 			buildPhases = (
-				06B0A56D2E7560B900E0AE25 /* Sources */,
-				06B0A56E2E7560B900E0AE25 /* Frameworks */,
-				06B0A56F2E7560B900E0AE25 /* Resources */,
+				06DCE8C62E7E433900C2CC5B /* Sources */,
+				06DCE8C72E7E433900C2CC5B /* Frameworks */,
+				06DCE8C82E7E433900C2CC5B /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				06B0A5732E7560B900E0AE25 /* PBXTargetDependency */,
+				06DCE8CC2E7E433900C2CC5B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				06B0A5742E7560B900E0AE25 /* maraudersUITests */,
+				06DCE8CD2E7E433900C2CC5B /* maraudersUITests */,
 			);
 			name = maraudersUITests;
 			packageProductDependencies = (
 			);
 			productName = maraudersUITests;
-			productReference = 06B0A5712E7560B900E0AE25 /* maraudersUITests.xctest */;
+			productReference = 06DCE8CA2E7E433900C2CC5B /* maraudersUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		06B0A5512E7560B800E0AE25 /* Project object */ = {
+		06DCE8A92E7E433800C2CC5B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1640;
-				LastUpgradeCheck = 1640;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
-					06B0A5582E7560B800E0AE25 = {
-						CreatedOnToolsVersion = 16.4;
+					06DCE8B02E7E433800C2CC5B = {
+						CreatedOnToolsVersion = 26.0;
 					};
-					06B0A5662E7560B900E0AE25 = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = 06B0A5582E7560B800E0AE25;
+					06DCE8BF2E7E433900C2CC5B = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 06DCE8B02E7E433800C2CC5B;
 					};
-					06B0A5702E7560B900E0AE25 = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = 06B0A5582E7560B800E0AE25;
+					06DCE8C92E7E433900C2CC5B = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 06DCE8B02E7E433800C2CC5B;
 					};
 				};
 			};
-			buildConfigurationList = 06B0A5542E7560B800E0AE25 /* Build configuration list for PBXProject "marauders" */;
+			buildConfigurationList = 06DCE8AC2E7E433800C2CC5B /* Build configuration list for PBXProject "marauders" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 06B0A5502E7560B800E0AE25;
+			mainGroup = 06DCE8A82E7E433800C2CC5B;
 			minimizedProjectReferenceProxies = 1;
-			packageReferences = (
-				06B0A59E2E75625C00E0AE25 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				06B0A5A32E7562C200E0AE25 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 06B0A55A2E7560B800E0AE25 /* Products */;
+			productRefGroup = 06DCE8B22E7E433800C2CC5B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				06B0A5582E7560B800E0AE25 /* marauders */,
-				06B0A5662E7560B900E0AE25 /* maraudersTests */,
-				06B0A5702E7560B900E0AE25 /* maraudersUITests */,
+				06DCE8B02E7E433800C2CC5B /* marauders */,
+				06DCE8BF2E7E433900C2CC5B /* maraudersTests */,
+				06DCE8C92E7E433900C2CC5B /* maraudersUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		06B0A5572E7560B800E0AE25 /* Resources */ = {
+		06DCE8AF2E7E433800C2CC5B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		06B0A5652E7560B900E0AE25 /* Resources */ = {
+		06DCE8BE2E7E433900C2CC5B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		06B0A56F2E7560B900E0AE25 /* Resources */ = {
+		06DCE8C82E7E433900C2CC5B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -264,21 +245,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		06B0A5552E7560B800E0AE25 /* Sources */ = {
+		06DCE8AD2E7E433800C2CC5B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		06B0A5632E7560B900E0AE25 /* Sources */ = {
+		06DCE8BC2E7E433900C2CC5B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		06B0A56D2E7560B900E0AE25 /* Sources */ = {
+		06DCE8C62E7E433900C2CC5B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -288,20 +269,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		06B0A5692E7560B900E0AE25 /* PBXTargetDependency */ = {
+		06DCE8C22E7E433900C2CC5B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 06B0A5582E7560B800E0AE25 /* marauders */;
-			targetProxy = 06B0A5682E7560B900E0AE25 /* PBXContainerItemProxy */;
+			target = 06DCE8B02E7E433800C2CC5B /* marauders */;
+			targetProxy = 06DCE8C12E7E433900C2CC5B /* PBXContainerItemProxy */;
 		};
-		06B0A5732E7560B900E0AE25 /* PBXTargetDependency */ = {
+		06DCE8CC2E7E433900C2CC5B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 06B0A5582E7560B800E0AE25 /* marauders */;
-			targetProxy = 06B0A5722E7560B900E0AE25 /* PBXContainerItemProxy */;
+			target = 06DCE8B02E7E433800C2CC5B /* marauders */;
+			targetProxy = 06DCE8CB2E7E433900C2CC5B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		06B0A5792E7560B900E0AE25 /* Debug */ = {
+		06DCE8D22E7E433900C2CC5B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -363,7 +344,7 @@
 			};
 			name = Debug;
 		};
-		06B0A57A2E7560B900E0AE25 /* Release */ = {
+		06DCE8D32E7E433900C2CC5B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -417,20 +398,20 @@
 			};
 			name = Release;
 		};
-		06B0A57C2E7560B900E0AE25 /* Debug */ = {
+		06DCE8D52E7E433900C2CC5B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = marauders/marauders.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9U8PYJFN94;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = marauders/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Marauders;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -441,37 +422,41 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.3;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.somsak.marauders;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				XROS_DEPLOYMENT_TARGET = 2.5;
+				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Debug;
 		};
-		06B0A57D2E7560B900E0AE25 /* Release */ = {
+		06DCE8D62E7E433900C2CC5B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = marauders/marauders.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9U8PYJFN94;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = marauders/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Marauders;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -482,24 +467,28 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.3;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.somsak.marauders;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				XROS_DEPLOYMENT_TARGET = 2.5;
+				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
 		};
-		06B0A57F2E7560B900E0AE25 /* Debug */ = {
+		06DCE8D82E7E433900C2CC5B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -507,22 +496,25 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9U8PYJFN94;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MACOSX_DEPLOYMENT_TARGET = 15.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.somsak.maraudersTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/marauders.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/marauders";
-				XROS_DEPLOYMENT_TARGET = 2.5;
+				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Debug;
 		};
-		06B0A5802E7560B900E0AE25 /* Release */ = {
+		06DCE8D92E7E433900C2CC5B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -530,147 +522,114 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9U8PYJFN94;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MACOSX_DEPLOYMENT_TARGET = 15.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.somsak.maraudersTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/marauders.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/marauders";
-				XROS_DEPLOYMENT_TARGET = 2.5;
+				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
 		};
-		06B0A5822E7560B900E0AE25 /* Debug */ = {
+		06DCE8DB2E7E433900C2CC5B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9U8PYJFN94;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MACOSX_DEPLOYMENT_TARGET = 15.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.somsak.maraudersUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_TARGET_NAME = marauders;
-				XROS_DEPLOYMENT_TARGET = 2.5;
+				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Debug;
 		};
-		06B0A5832E7560B900E0AE25 /* Release */ = {
+		06DCE8DC2E7E433900C2CC5B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9U8PYJFN94;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MACOSX_DEPLOYMENT_TARGET = 15.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.somsak.maraudersUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_TARGET_NAME = marauders;
-				XROS_DEPLOYMENT_TARGET = 2.5;
+				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		06B0A5542E7560B800E0AE25 /* Build configuration list for PBXProject "marauders" */ = {
+		06DCE8AC2E7E433800C2CC5B /* Build configuration list for PBXProject "marauders" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				06B0A5792E7560B900E0AE25 /* Debug */,
-				06B0A57A2E7560B900E0AE25 /* Release */,
+				06DCE8D22E7E433900C2CC5B /* Debug */,
+				06DCE8D32E7E433900C2CC5B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		06B0A57B2E7560B900E0AE25 /* Build configuration list for PBXNativeTarget "marauders" */ = {
+		06DCE8D42E7E433900C2CC5B /* Build configuration list for PBXNativeTarget "marauders" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				06B0A57C2E7560B900E0AE25 /* Debug */,
-				06B0A57D2E7560B900E0AE25 /* Release */,
+				06DCE8D52E7E433900C2CC5B /* Debug */,
+				06DCE8D62E7E433900C2CC5B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		06B0A57E2E7560B900E0AE25 /* Build configuration list for PBXNativeTarget "maraudersTests" */ = {
+		06DCE8D72E7E433900C2CC5B /* Build configuration list for PBXNativeTarget "maraudersTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				06B0A57F2E7560B900E0AE25 /* Debug */,
-				06B0A5802E7560B900E0AE25 /* Release */,
+				06DCE8D82E7E433900C2CC5B /* Debug */,
+				06DCE8D92E7E433900C2CC5B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		06B0A5812E7560B900E0AE25 /* Build configuration list for PBXNativeTarget "maraudersUITests" */ = {
+		06DCE8DA2E7E433900C2CC5B /* Build configuration list for PBXNativeTarget "maraudersUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				06B0A5822E7560B900E0AE25 /* Debug */,
-				06B0A5832E7560B900E0AE25 /* Release */,
+				06DCE8DB2E7E433900C2CC5B /* Debug */,
+				06DCE8DC2E7E433900C2CC5B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		06B0A59E2E75625C00E0AE25 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google/GoogleSignIn-iOS.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 9.0.0;
-			};
-		};
-		06B0A5A32E7562C200E0AE25 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 12.2.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		06B0A59F2E75625C00E0AE25 /* GoogleSignIn */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 06B0A59E2E75625C00E0AE25 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-			productName = GoogleSignIn;
-		};
-		06B0A5A12E75625C00E0AE25 /* GoogleSignInSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 06B0A59E2E75625C00E0AE25 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-			productName = GoogleSignInSwift;
-		};
-		06B0A5A42E7562C200E0AE25 /* FirebaseAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 06B0A5A32E7562C200E0AE25 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAuth;
-		};
-		06B0A5A62E7562C200E0AE25 /* FirebaseCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 06B0A5A32E7562C200E0AE25 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCore;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = 06B0A5512E7560B800E0AE25 /* Project object */;
+	rootObject = 06DCE8A92E7E433800C2CC5B /* Project object */;
 }
