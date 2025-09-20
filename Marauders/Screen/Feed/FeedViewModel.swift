@@ -1,10 +1,16 @@
 import Combine
 import CoreLocation
 
-class FeedViewModel: ObservableObject {
+final class FeedViewModel: ObservableObject {
     
+    private let service: FeedService
     @Published var posts = [Post]()
 //    @Published var data: DataType?
+    
+    init(service: FeedService) {
+        self.service = service
+        fetchPosts()
+    }
     
     let videoUrls = [
         Bundle.main.url(forResource: "oneDancing", withExtension: "mp4")!,
@@ -16,10 +22,6 @@ class FeedViewModel: ObservableObject {
 //        "https://cdn.zerojame.com/selfie.mp4",
 //        "https://cdn.zerojame.com/threeDancing.mp4"
     ]
-    
-    init () {
-        fetchPosts()
-    }
     
     func fetchPosts() {
         
@@ -61,12 +63,17 @@ class FeedViewModel: ObservableObject {
     
     
     
-    func fetchData() async {
-        do {
-            self.posts = try await FeedService().fetchPosts()
-        } catch {
-            print("Failed to fetch posts:", error)
-            // Optionally, you could publish an error state here for the UI
+    func fetchData() {
+        service.login { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let post):
+                    self?.posts = post
+                case .failure(let error):
+                    print("Error:", error)
+                }
+            }
+            
         }
     }
 }

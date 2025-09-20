@@ -5,11 +5,16 @@ struct MainTabView: View {
 //    @State private var selectedTabIndex = 0
     
     @StateObject var tabRouter = TabRouter()
+    private let services: ServiceContainer
+    
+    init(services: ServiceContainer) {
+        self.services = services
+    }
     
     var body: some View {
         
         TabView(selection: $tabRouter.selectedTab) {
-            FeedSceneView()
+            FeedSceneView(services: services)
                 .tabItem {
                     VStack {
                         Image(systemName: tabRouter.selectedTab == 0 ? "house.fill" : "house")
@@ -61,7 +66,8 @@ struct MainTabView: View {
 }
 
 #Preview {
-    MainTabView()
+    
+    MainTabView(services: ServiceContainer())
 }
 
 class TabRouter: ObservableObject {

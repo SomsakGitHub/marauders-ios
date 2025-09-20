@@ -3,9 +3,15 @@ import AVFoundation
 
 struct FeedSceneView: View {
     
-    @StateObject var viewModel = FeedViewModel()
+    @StateObject private var viewModel: FeedViewModel
     @State private var scrollPosition: String?
     @State private var player = AVPlayer()
+    
+    init(services: ServiceContainer) {
+        _viewModel = StateObject(
+            wrappedValue: FeedViewModel(service: services.feed)
+        )
+    }
     
     var body: some View {
         ScrollView {
@@ -53,5 +59,5 @@ struct FeedSceneView: View {
 }
 
 #Preview {
-    FeedSceneView()
+    FeedSceneView(services: ServiceContainer())
 }

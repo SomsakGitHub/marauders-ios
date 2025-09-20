@@ -3,6 +3,7 @@ import SwiftData
 
 @main
 struct maraudersApp: App {
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -27,13 +28,14 @@ struct maraudersApp: App {
 
 struct RootView: View {
     
+    private let services = ServiceContainer()
     var isLogin = false
 
     var body: some View {
         if isLogin {
 //            MainTabView().environmentObject(authentication)
         } else {
-            MainTabView()
+            MainTabView(services: services)
         }
     }
 }
