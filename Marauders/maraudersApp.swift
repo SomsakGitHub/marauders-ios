@@ -1,9 +1,15 @@
+//
+//  MaraudersApp.swift
+//  Marauders
+//
+//  Created by tiscomacnb2486 on 12/11/2568 BE.
+//
+
 import SwiftUI
 import SwiftData
 
 @main
-struct maraudersApp: App {
-    
+struct MaraudersApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -20,22 +26,8 @@ struct maraudersApp: App {
     var body: some Scene {
         WindowGroup {
 //            ContentView()
-            RootView()
+            MapView()
         }
         .modelContainer(sharedModelContainer)
-    }
-}
-
-struct RootView: View {
-    
-    private let services = ServiceContainer()
-    var isLogin = false
-
-    var body: some View {
-        if isLogin {
-//            MainTabView().environmentObject(authentication)
-        } else {
-            MainTabView(services: services)
-        }
     }
 }

@@ -1,6 +1,13 @@
+//
+//  MaraudersUITests.swift
+//  MaraudersUITests
+//
+//  Created by tiscomacnb2486 on 12/11/2568 BE.
+//
+
 import XCTest
 
-final class maraudersUITests: XCTestCase {
+final class MaraudersUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
