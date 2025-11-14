@@ -1,85 +1,112 @@
+import SwiftUI
+import MapKit
+
+struct MapView: View {
+    @StateObject private var locationManager = LocationManager()
+
+    var body: some View {
+        ZStack {
+            if locationManager.authorizationStatus == .authorizedAlways ||
+               locationManager.authorizationStatus == .authorizedWhenInUse {
+                
+                // Map ใช้งานได้
+                Map(position: .constant(.automatic))
+                    .edgesIgnoringSafeArea(.all)
+                
+            } else if locationManager.authorizationStatus == .denied ||
+                      locationManager.authorizationStatus == .restricted {
+                
+                // หน้าบล็อก
+                LocationPermissionBlocker {
+                    locationManager.requestPermission() // เรียกใหม่
+                }
+            } else {
+                
+                // กำลังตรวจสอบ
+                ProgressView("Checking Permission...")
+            }
+        }
+        .onAppear {
+            locationManager.requestPermission()
+        }
+    }
+}
+
+#Preview {
+    MapView()
+}
+
 import CoreLocation
-import SwiftData
 import Combine
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    private let manager = CLLocationManager()
     
-    let manager = CLLocationManager()
-    
-    @Published var location: CLLocationCoordinate2D?
-    
+    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
+
     override init() {
         super.init()
         manager.delegate = self
-//        manager.startUpdatingHeading()
+    }
+    
+    func requestPermission() {
         manager.requestWhenInUseAuthorization()
-//        manager.startUpdatingLocation()
+        manager.startUpdatingLocation()
     }
     
-    func requestLocation() {
-        manager.requestLocation()
-    }
-    
-    
-//    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-//        degrees = newHeading.trueHeading
-//    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        location = locations.first?.coordinate
-//        GlobalVariable.shared.location = location
-        print("location=>", location?.latitude)
-        print("location=>", location?.longitude)
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error)
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        authorizationStatus = manager.authorizationStatus
     }
 }
 
-@Model
-class Location {
-    var latitude: Double
-    var longitude: Double
-    
-    init(latitude: Double, longitude: Double) {
-        self.latitude = latitude
-        self.longitude = longitude
-    }
-}
+import SwiftUI
 
-
-@propertyWrapper
-struct AppStorageWrapper<Value> {
-    let key: String
-    let defaultValue: Value
-    var container: UserDefaults = .standard
+struct LocationPermissionBlocker: View {
+    var onRetry: () -> Void
     
-    var wrappedValue: Value {
-        get {
-            if Value.self == String.self {
-                return (container.string(forKey: key) as? Value) ?? defaultValue
-            } else if Value.self == Int.self {
-                return (container.integer(forKey: key) as? Value) ?? defaultValue
-            } else if Value.self == Double.self {
-                return (container.double(forKey: key) as? Value) ?? defaultValue
-            } else if Value.self == Bool.self {
-                return (container.bool(forKey: key) as? Value) ?? defaultValue
+    var body: some View {
+        VStack(spacing: 24) {
+            
+            Image(systemName: "location.slash")
+                .font(.system(size: 60))
+                .foregroundColor(.red)
+            
+            Text("Location Access Needed")
+                .font(.largeTitle).bold()
+            
+            Text("To show your position on the map, please enable location access in Settings.")
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            
+            VStack(spacing: 12) {
+                Button {
+                    openSettings()
+                } label: {
+                    Text("Open Settings")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                }
+                
+//                Button("Try Again") {
+//                    onRetry()
+//                }
+                .padding(.top, 4)
             }
-            return defaultValue
+            .padding(.horizontal)
         }
-        set {
-            container.set(newValue, forKey: key)
-        }
+        .padding()
     }
 }
 
-//class AppSettings: ObservableObject {
-//    static let shared = AppSettings()
-//    
-//    @AppStorageWrapper(key: "latitude", defaultValue: 0.0)
-//    var latitude: Double
-//    
-//    @AppStorageWrapper(key: "longitude", defaultValue: 0.0)
-//    var longitude: Double
-//}
+private func openSettings() {
+    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+    UIApplication.shared.open(url)
+}
+
+
+
+
+

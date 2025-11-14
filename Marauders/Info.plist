@@ -2,7 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need your location to show your position on the map. Please enable it in Settings.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>แอปนี้ต้องการเข้าถึงตำแหน่งของคุณเพื่อแสดงข้อมูลในบริเวณใกล้เคียง</string>
+	<string>We need your location to show your position on the map. Please enable it in Settings.</string>
 </dict>
 </plist>
