@@ -1,10 +1,19 @@
 import CoreLocation
 import Combine
 
-class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
-    
-    let manager = CLLocationManager()
+protocol LocationServiceProtocol: AnyObject, ObservableObject {
+    var authorizationStatus: CLAuthorizationStatus { get set }
+    var userLocation: CLLocation? { get set }
 
+    var objectWillChange: ObservableObjectPublisher { get }
+
+    func requestAuthorization()
+}
+
+class LocationService: NSObject, LocationServiceProtocol, CLLocationManagerDelegate {
+
+    let manager = CLLocationManager()
+    
     @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
     @Published var userLocation: CLLocation?
 

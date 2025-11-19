@@ -3,35 +3,36 @@ import Combine
 import CoreLocation
 import MapKit
 
-class MapViewModel: ObservableObject {
 
+
+class MapViewModel: ObservableObject {
+    
+    static let latitude = 13.63164
+    static let longitude = 13.63164
+    
     @Published var showOnboarding = true
     @Published var isMapReady = false
     @Published var selectedCoordinate: CLLocationCoordinate2D?
-
     @Published var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 13.63164, longitude: 100.66442),
+        center: CLLocationCoordinate2D(latitude: latitude, longitude: longitude),
         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
     )
-
     @Published var status: CLAuthorizationStatus = .notDetermined
 
     private var cancellables = Set<AnyCancellable>()
+    private let locationService: LocationServiceProtocol
 
-    let locationService: LocationService
-
-    init(locationService: LocationService = LocationService()) {
+    init(locationService: LocationServiceProtocol = LocationService()) {
         self.locationService = locationService
-        
-        // Bind service → VM
-        locationService.$authorizationStatus
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$status)
-        
-        locationService.$userLocation
-            .compactMap { $0?.coordinate }
-            .sink { [weak self] coordinate in
-                self?.region.center = coordinate
+
+        // bind locationService -> viewModel
+        locationService.objectWillChange
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.status = locationService.authorizationStatus
+                if let coord = locationService.userLocation?.coordinate {
+                    self.region.center = coord
+                }
             }
             .store(in: &cancellables)
     }
@@ -48,3 +49,4 @@ class MapViewModel: ObservableObject {
         selectedCoordinate = coordinate
     }
 }
+
