@@ -2,64 +2,43 @@ import SwiftUI
 import MapKit
 
 struct MapView: View {
-    @StateObject private var locationManager = LocationManager()
-    @State private var showOnboarding = true
-    @State private var isMapReady = false
+    @StateObject private var vm = MapViewModel()
 
     var body: some View {
         ZStack {
-            
-            // 1) Authorized → แสดง Map
-            if locationManager.authorizationStatus == .authorizedWhenInUse ||
-               locationManager.authorizationStatus == .authorizedAlways {
+            if vm.status == .authorizedAlways || vm.status == .authorizedWhenInUse {
 
-                ZStack {
-                    
-//                    Map(position: .constant(.automatic))
-//                        .edgesIgnoringSafeArea(.all)
-                    
-                    CustomMap(onMapReady: {
-                        withAnimation { isMapReady = true }
-                    })
-
-                    if !isMapReady {
+                CustomMap(
+                    region: $vm.region,
+                    onTap: vm.onUserTap,
+                    onMapReady: vm.onMapReady
+                )
+                .overlay {
+                    if !vm.isMapReady {
                         ProgressView("Loading Map...")
                             .padding()
                             .background(.ultraThinMaterial)
                             .cornerRadius(12)
-                            .transition(.opacity)
                     }
                 }
-            }
-            
-            // 2) ถ้าเป็น .notDetermined และ showOnboarding = true → แสดง onboarding
-            else if showOnboarding {
+
+            } else if vm.status == .notDetermined && vm.showOnboarding {
+
                 LocationOnboardingView {
-                    showOnboarding = false
-                    locationManager.requestPermission()
+                    vm.showOnboarding = false
+                    vm.requestPermission()
                 }
-                .background(.ultraThinMaterial)
-                .transition(.opacity)
-                .animation(.easeOut(duration: 0.3), value: showOnboarding)
-            }
-            
-            // 3) ถ้า Denied → โชว์ Blocker
-            else if locationManager.authorizationStatus == .denied ||
-               locationManager.authorizationStatus == .restricted {
+
+            } else if vm.status == .denied || vm.status == .restricted {
+
                 LocationPermissionBlocker {
-                    locationManager.requestPermission()
+                    vm.requestPermission()
                 }
-                .transition(.opacity)
-                .animation(.easeOut(duration: 0.3), value: locationManager.authorizationStatus)
-            }
-        }
-        .onChange(of: locationManager.authorizationStatus) { status, _ in
-            if status == .authorizedWhenInUse || status == .authorizedAlways {
-                withAnimation { showOnboarding = false }
             }
         }
     }
 }
+
 
 #Preview {
     MapView()

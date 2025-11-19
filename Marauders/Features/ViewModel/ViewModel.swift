@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 import CoreLocation
+import MapKit
 
 class MapViewModel: ObservableObject {
 
@@ -9,7 +10,7 @@ class MapViewModel: ObservableObject {
     @Published var selectedCoordinate: CLLocationCoordinate2D?
 
     @Published var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+        center: CLLocationCoordinate2D(latitude: 13.63164, longitude: 100.66442),
         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
     )
 
@@ -24,7 +25,7 @@ class MapViewModel: ObservableObject {
         
         // Bind service → VM
         locationService.$authorizationStatus
-            .receive(on: .main)
+            .receive(on: DispatchQueue.main)
             .assign(to: &$status)
         
         locationService.$userLocation

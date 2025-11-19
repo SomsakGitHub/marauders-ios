@@ -1,8 +1,8 @@
 import CoreLocation
 import Combine
 
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
-
+class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
+    
     let manager = CLLocationManager()
 
     @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
@@ -14,7 +14,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         manager.desiredAccuracy = kCLLocationAccuracyBest
     }
 
-    func requestPermission() {
+    func requestAuthorization() {
         manager.requestWhenInUseAuthorization()
         manager.startUpdatingLocation()
     }

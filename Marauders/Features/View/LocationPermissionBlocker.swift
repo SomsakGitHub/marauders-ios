@@ -37,8 +37,8 @@ struct LocationPermissionBlocker: View {
                         .cornerRadius(12)
                 }
                 
-                Button("Try Again") { onRetry() }
-                    .padding(.top, 4)
+//                Button("Try Again") { onRetry() }
+//                    .padding(.top, 4)
             }
             .padding(.horizontal)
             .opacity(fadeIn ? 1 : 0)
