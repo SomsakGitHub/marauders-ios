@@ -3,8 +3,6 @@ import Combine
 import CoreLocation
 import MapKit
 
-
-
 class MapViewModel: ObservableObject {
     
     static let latitude = 13.63164
