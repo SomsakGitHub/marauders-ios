@@ -1,0 +1,94 @@
+# .swiftlint.yml — Best practice for iOS/Swift projects
+
+# --- Include / Exclude ---
+included:
+  - Marauders
+  - MaraudersTests
+  - MaraudersUITests
+
+excluded:
+  - Pods
+  - fastlane
+  - .build
+  - Scripts
+  - Vendor
+  - .git
+  
+# --- Opt-in rules ---
+opt_in_rules:
+  - force_unwrapping
+  - force_cast
+  - empty_count
+  - array_init
+  - closure_spacing
+  - explicit_init
+  - redundant_nil_coalescing
+
+force_cast: warning
+force_unwrapping: error
+
+# --- Disable rules that are often undesirable in modern safe Swift ---
+disabled_rules:
+  - force_cast           # prefer safe cast (as?)
+  - force_try            # avoid force-try; handle errors
+  # - force_unwrapping     # avoid unexpected crashes from !
+  - trailing_whitespace
+  - line_length          # use explicit line_length config below instead of hard-disable if desired
+
+# --- Rule configurations ---
+line_length:
+  warning: 120
+  error: 200
+  ignores_comments: true
+  ignores_urls: true
+  ignores_function_declarations: true
+  ignores_interpolated_strings: true
+
+file_length:
+  warning: 400
+  error: 1000
+
+type_body_length:
+  warning: 300
+  error: 800
+
+cyclomatic_complexity:
+  warning: 12
+  error: 20
+
+# Prefer smaller functions / single responsibility; tune to your team
+
+# --- Custom rules (regex) ---
+custom_rules:
+  no_todo_comments:
+    name: "No TODO comments"
+    regex: '(//|/\\*)\\s*TODO[:\\s]'
+    message: "Remove TODOs or turn them into issues before merging."
+    severity: warning
+
+  no_debug_prints:
+    name: "No debug prints"
+    regex: '\\bprint\\s*\\('
+    message: "Remove debug print statements (use logging framework or os_log)."
+    severity: warning
+
+  no_force_try_try?:
+    name: "Discourage try!"
+    regex: '\\btry!\\b'
+    message: "Avoid try! — handle errors explicitly."
+    severity: error
+
+# --- Opt-in rules you may want enabled (uncomment to enable) ---
+# opt_in_rules:
+#   - empty_count
+#   - explicit_init
+#   - closure_spacing
+#   - redundant_nil_coalescing
+
+# --- Rule-specific overrides (examples) ---
+# override for function body length in test targets:
+excluded_rules: # can be used per-file, but here we show global fallback
+  - identifier_name
+
+# --- Reporter / performance ---
+# Use the default reporter; CI can use --reporter json to parse

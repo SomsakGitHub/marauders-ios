@@ -23,6 +23,9 @@ struct MapViewModelTests {
         #expect(vm.status == .notDetermined)
         #expect(vm.region.center.latitude == MapViewModel.latitude)
         #expect(vm.region.center.longitude == MapViewModel.longitude)
+        
+//        let name: String? = nil
+//        print(name!)      // <- force_unwrapping
     }
 
     @MainActor
