@@ -26,7 +26,7 @@ struct MaraudersApp: App {
     var body: some Scene {
         WindowGroup {
 //            ContentView()
-            MapView()
+            MapView(viewModel: MapViewDIContainer.shared.makeMapViewModel())
         }
         .modelContainer(sharedModelContainer)
     }

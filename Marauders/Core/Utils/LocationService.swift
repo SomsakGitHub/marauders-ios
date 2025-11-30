@@ -1,21 +1,28 @@
 import CoreLocation
 import Combine
 
-protocol LocationServiceProtocol: AnyObject, ObservableObject {
-    var authorizationStatus: CLAuthorizationStatus { get set }
-    var userLocation: CLLocation? { get set }
-
-    var objectWillChange: ObservableObjectPublisher { get }
-
+protocol LocationServiceProtocol {
+    var authorizationStatusPublisher: AnyPublisher<CLAuthorizationStatus, Never> { get }
+    var locationPublisher: AnyPublisher<CLLocation, Never> { get }
     func requestAuthorization()
 }
 
-class LocationService: NSObject, LocationServiceProtocol, CLLocationManagerDelegate {
+final class LocationService: NSObject, LocationServiceProtocol {
 
-    let manager = CLLocationManager()
-    
-    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
-    @Published var userLocation: CLLocation?
+    private let manager = CLLocationManager()
+
+    @Published private var authorizationStatus: CLAuthorizationStatus = .notDetermined
+    @Published private var userLocation: CLLocation?
+
+    var authorizationStatusPublisher: AnyPublisher<CLAuthorizationStatus, Never> {
+        $authorizationStatus.eraseToAnyPublisher()
+    }
+
+    var locationPublisher: AnyPublisher<CLLocation, Never> {
+        $userLocation
+            .compactMap { $0 }
+            .eraseToAnyPublisher()
+    }
 
     override init() {
         super.init()
@@ -27,7 +34,9 @@ class LocationService: NSObject, LocationServiceProtocol, CLLocationManagerDeleg
         manager.requestWhenInUseAuthorization()
         manager.startUpdatingLocation()
     }
+}
 
+extension LocationService: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         authorizationStatus = manager.authorizationStatus
     }
@@ -36,3 +45,4 @@ class LocationService: NSObject, LocationServiceProtocol, CLLocationManagerDeleg
         userLocation = locations.last
     }
 }
+

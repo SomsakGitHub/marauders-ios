@@ -1,98 +1,186 @@
 import Testing
+import Combine
 import CoreLocation
 import MapKit
-import Combine
 @testable import Marauders
 
-struct MapViewModelTests {
+@Suite("MapViewModel Full Coverage Tests")
+@MainActor
+final class MapViewModelTests {
+    
+    final class MockLocationService: LocationServiceProtocol {
 
-    @MainActor
-    @Test
-    func testInitUpdatesStatusAndRegion() async throws {
-        // GIVEN
-        let mockLocation = CLLocation(latitude: MapViewModel.latitude, longitude: MapViewModel.longitude)
-        let mock = MockLocationService(
-            status: .authorizedWhenInUse,
-            location: mockLocation
-        )
+        let authSubject = PassthroughSubject<CLAuthorizationStatus, Never>()
+        let locSubject = PassthroughSubject<CLLocation, Never>()
 
-        // WHEN
-        let vm = MapViewModel(locationService: mock)
+        private(set) var requestAuthorizationCalled = false
 
-        // THEN
-        #expect(vm.status == .notDetermined)
-        #expect(vm.region.center.latitude == MapViewModel.latitude)
-        #expect(vm.region.center.longitude == MapViewModel.longitude)
-        
-//        let name: String? = nil
-//        print(name!)      // <- force_unwrapping
+        var authorizationStatusPublisher: AnyPublisher<CLAuthorizationStatus, Never> {
+            authSubject.eraseToAnyPublisher()
+        }
+
+        var locationPublisher: AnyPublisher<CLLocation, Never> {
+            locSubject
+                .receive(on: RunLoop.main)
+                .eraseToAnyPublisher()
+        }
+
+        func requestAuthorization() {
+            requestAuthorizationCalled = true
+        }
     }
 
     @MainActor
-    @Test
-    func testRegionUpdatesWhenLocationChanges() async throws {
-        // GIVEN: mock location service with initial values
-        let mock = MockLocationService(
-            status: .authorizedWhenInUse,
-            location: nil
+    final class MockUpdateRegionUseCase: MapUseCaseProtocol {
+        private(set) var receivedLocation: CLLocation?
+        var returnedRegion = MKCoordinateRegion(
+            center: .init(latitude: 1, longitude: 1),
+            span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
         )
 
-        let vm = MapViewModel(locationService: mock)
+        func updateRegion(from location: CLLocation?) -> MKCoordinateRegion {
+            receivedLocation = location
+            return returnedRegion
+        }
+    }
 
-        // initial should not match new location
-        #expect(vm.region.center.latitude != 10.0)
-        #expect(vm.region.center.longitude != 20.0)
+    @MainActor
+    final class MockSendLocationUseCase: SendLocationUseCaseProtocol {
 
-        // WHEN: update mock location and send objectWillChange
-        mock.userLocation = CLLocation(latitude: 10.0, longitude: 20.0)
-        mock.objectWillChange.send()   // ← สำคัญมาก เพื่อ trigger sink()
+        private(set) var called = false
+        private(set) var received: LocationDTO?
 
-        // THEN: region must update
-        #expect(vm.region.center.latitude == 10.0)
-        #expect(vm.region.center.longitude == 20.0)
+        func execute(dto: LocationDTO) async throws {
+            called = true
+            received = dto
+        }
     }
 
 
-    @MainActor
-    @Test
-    func testRequestPermissionCallsService() async throws {
-        // GIVEN
-        let mock = MockLocationService()
-        let vm = MapViewModel(locationService: mock)
+    // MARK: Init
+    @Test("init → region เริ่มต้นควรตรงกับ useCase.updateRegion(nil)")
+    func testInitialRegion() {
+        let mockLocation = MockLocationService()
+        let mockUseCase = MockUpdateRegionUseCase()
+        let sendUseCase = MockSendLocationUseCase()
 
-        // WHEN
+        mockUseCase.returnedRegion = MKCoordinateRegion(
+            center: .init(latitude: 99, longitude: 55),
+            span: .init(latitudeDelta: 0.5, longitudeDelta: 0.5)
+        )
+
+        let vm = MapViewModel(
+            locationService: mockLocation,
+            updateRegionUseCase: mockUseCase,
+            sendLocationUseCase: sendUseCase
+        )
+
+        #expect(vm.region.center.latitude == 99)
+        #expect(vm.region.center.longitude == 55)
+    }
+
+    // MARK: Authorization Binding
+    @Test("Auth → status ต้องอัปเดตเมื่อ publisher ส่งค่า")
+    func testAuthorizationBinding() async throws {
+        let mockLocation = MockLocationService()
+        let vm = MapViewModel(
+            locationService: mockLocation,
+            updateRegionUseCase: MockUpdateRegionUseCase(),
+            sendLocationUseCase: MockSendLocationUseCase()
+        )
+
+        mockLocation.authSubject.send(.authorizedAlways)
+
+        try await Task.sleep(nanoseconds: 50_000_000)
+
+        #expect(vm.status == .authorizedAlways)
+    }
+
+    // MARK: Location Binding + Region Update + API call
+    @Test("Location → userLocation, region, sendLocationUseCase.execute() ต้องถูกเรียก")
+    func testLocationBindingFullFlow() async throws {
+        let mockLocation = MockLocationService()
+        let mockRegion = MockUpdateRegionUseCase()
+        let sendUseCase = MockSendLocationUseCase()
+
+        let vm = MapViewModel(
+            locationService: mockLocation,
+            updateRegionUseCase: mockRegion,
+            sendLocationUseCase: sendUseCase
+        )
+
+        let loc = CLLocation(latitude: 10, longitude: 20)
+        mockRegion.returnedRegion = MKCoordinateRegion(
+            center: .init(latitude: 99, longitude: 77),
+            span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        )
+
+        mockLocation.locSubject.send(loc)
+
+        try await Task.sleep(nanoseconds: 150_000_000)
+
+        #expect(vm.userLocation?.coordinate.latitude == 10)
+        #expect(mockRegion.receivedLocation === loc)
+        #expect(vm.region.center.latitude == 99)
+        #expect(sendUseCase.called == true)
+        #expect(sendUseCase.received?.latitude == 10)
+        #expect(sendUseCase.received?.longitude == 20)
+    }
+
+    // MARK: Request Permission
+    @Test("requestPermission → locationService.requestAuthorization() ต้องถูกเรียก")
+    func testRequestPermission() {
+        let mockLocation = MockLocationService()
+        let vm = MapViewModel(
+            locationService: mockLocation,
+            updateRegionUseCase: MockUpdateRegionUseCase(),
+            sendLocationUseCase: MockSendLocationUseCase()
+        )
+
         vm.requestPermission()
 
-        // THEN
-        #expect(mock.requestAuthorizationCalled == true)
+        #expect(mockLocation.requestAuthorizationCalled == true)
     }
 
-    @MainActor
-    @Test
-    func testOnMapReadySetsFlag() async throws {
-        // GIVEN
-        let vm = MapViewModel(locationService: MockLocationService())
+    // MARK: Map Ready
+    @Test("onMapReady → isMapReady = true")
+    func testMapReady() {
+        let vm = MapViewModel(
+            locationService: MockLocationService(),
+            updateRegionUseCase: MockUpdateRegionUseCase(),
+            sendLocationUseCase: MockSendLocationUseCase()
+        )
 
-        // WHEN
         vm.onMapReady()
 
-        // THEN
         #expect(vm.isMapReady == true)
     }
 
-    @MainActor
-    @Test
-    func testOnUserTapUpdatesSelectedCoordinate() async throws {
-        // GIVEN
-        let vm = MapViewModel(locationService: MockLocationService())
-        let tapCoordinate = CLLocationCoordinate2D(latitude: 1.0, longitude: 2.0)
+    // MARK: User Tap
+    @Test("onUserTap → selectedCoordinate ต้องถูกตั้งค่า")
+    func testUserTap() {
+        let vm = MapViewModel(
+            locationService: MockLocationService(),
+            updateRegionUseCase: MockUpdateRegionUseCase(),
+            sendLocationUseCase: MockSendLocationUseCase()
+        )
 
-        // WHEN
-        vm.onUserTap(tapCoordinate)
+        let coord = CLLocationCoordinate2D(latitude: 1, longitude: 2)
+        vm.onUserTap(coord)
 
-        // THEN
-        #expect(vm.selectedCoordinate?.latitude == 1.0)
-        #expect(vm.selectedCoordinate?.longitude == 2.0)
+        #expect(vm.selectedCoordinate?.latitude == 1)
+        #expect(vm.selectedCoordinate?.longitude == 2)
     }
 
+    // MARK: Onboarding (เผื่อ logic ในอนาคต)
+    @Test("showOnboarding default = true")
+    func testOnboardingDefault() {
+        let vm = MapViewModel(
+            locationService: MockLocationService(),
+            updateRegionUseCase: MockUpdateRegionUseCase(),
+            sendLocationUseCase: MockSendLocationUseCase()
+        )
+
+        #expect(vm.showOnboarding == true)
+    }
 }
