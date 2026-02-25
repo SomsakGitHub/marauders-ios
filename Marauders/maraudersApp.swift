@@ -1,10 +1,4 @@
-//
-//  MaraudersApp.swift
-//  Marauders
-//
-//  Created by tiscomacnb2486 on 12/11/2568 BE.
-//
-
+import Foundation
 import SwiftUI
 import SwiftData
 
@@ -26,8 +20,18 @@ struct MaraudersApp: App {
     var body: some Scene {
         WindowGroup {
 //            ContentView()
-            MapView(viewModel: MapViewDIContainer.shared.makeMapViewModel())
+//            MapView(viewModel: MapViewDIContainer.shared.makeMapViewModel())
+            FeedSceneView()
         }
         .modelContainer(sharedModelContainer)
+    }
+}
+
+@Model
+final class Item {
+    var timestamp: Date
+    
+    init(timestamp: Date) {
+        self.timestamp = timestamp
     }
 }

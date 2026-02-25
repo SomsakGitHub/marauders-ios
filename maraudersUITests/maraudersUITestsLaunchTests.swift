@@ -1,10 +1,3 @@
-//
-//  MaraudersUITestsLaunchTests.swift
-//  MaraudersUITests
-//
-//  Created by tiscomacnb2486 on 12/11/2568 BE.
-//
-
 import XCTest
 
 final class MaraudersUITestsLaunchTests: XCTestCase {

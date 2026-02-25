@@ -48,15 +48,15 @@ final class MapViewModel: ObservableObject {
                 self.userLocation = location
                 self.region = self.updateRegionUseCase.updateRegion(from: location)
 
-                Task {
-                    let dto = LocationDTO(
-                        latitude: location.coordinate.latitude,
-                        longitude: location.coordinate.longitude,
-                        accuracy: location.horizontalAccuracy,
-                        timestamp: Date()
-                    )
-                    try? await self.sendLocationUseCase.execute(dto: dto)
-                }
+//                Task {
+//                    let dto = LocationDTO(
+//                        latitude: location.coordinate.latitude,
+//                        longitude: location.coordinate.longitude,
+//                        accuracy: location.horizontalAccuracy,
+//                        timestamp: Date()
+//                    )
+//                    try? await self.sendLocationUseCase.execute(dto: dto)
+//                }
             }
             .store(in: &cancellables)
     }

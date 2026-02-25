@@ -1,31 +1,31 @@
-import SwiftUI
-
-struct VTabView: View {
-    var body: some View {
-        TabView {
-            ZStack {
-                PlayerView()
-                HStack {
-                    Spacer()
-                    ReactionButtons1View()
-                }
-                .frame(width: UIScreen.main.bounds.width)
-            }
-            
+//import SwiftUI
+//
+//struct VTabView: View {
+//    var body: some View {
+//        TabView {
 //            ZStack {
-//                ThirdVideoView()
+//                PlayerView()
 //                HStack {
 //                    Spacer()
-//                    ReactionButtons3View()
+////                    ReactionButtons1View()
 //                }
 //                .frame(width: UIScreen.main.bounds.width)
 //            }
-        }
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        .ignoresSafeArea()
-    }
-}
-
-#Preview {
-    VTabView()
-}
+//            
+////            ZStack {
+////                ThirdVideoView()
+////                HStack {
+////                    Spacer()
+////                    ReactionButtons3View()
+////                }
+////                .frame(width: UIScreen.main.bounds.width)
+////            }
+//        }
+//        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+//        .ignoresSafeArea()
+//    }
+//}
+//
+//#Preview {
+//    VTabView()
+//}
