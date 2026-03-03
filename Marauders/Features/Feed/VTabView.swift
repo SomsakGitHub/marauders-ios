@@ -1,7 +1,15 @@
-import Foundation
+
 import AVFoundation
 import SwiftUI
 import Combine
+
+enum PlaybackState {
+    case idle
+    case loading
+    case playing
+    case paused
+    case stalled
+}
 
 struct VideoItem: Identifiable, Equatable {
     let id = UUID().uuidString
@@ -11,6 +19,7 @@ struct VideoItem: Identifiable, Equatable {
 protocol FeedRepositoryProtocol {
     func fetch(page: Int) async throws -> [VideoItem]
 }
+
 
 final class MockFeedRepository: FeedRepositoryProtocol {
 
@@ -26,38 +35,69 @@ final class MockFeedRepository: FeedRepositoryProtocol {
     }
 }
 
+//struct FeedView: View {
+//
+//    @StateObject private var viewModel = FeedViewModel()
+//    @State private var currentID: String?
+//
+//    var body: some View {
+//        ScrollView(.vertical) {
+//            LazyVStack(spacing: 0) {
+//                ForEach(viewModel.videos) { video in
+//                    VideoCell(video: video)
+//                        .containerRelativeFrame(.vertical)
+//                        .id(video.id)
+//                }
+//            }
+//            .scrollTargetLayout()
+//        }
+//        .scrollTargetBehavior(.paging)
+//        .scrollPosition(id: $currentID)
+//        .ignoresSafeArea()
+//        .onChange(of: currentID) { id in
+//            guard let id else { return }
+//            viewModel.didFocusVideo(id: id)
+//        }
+//        .task {
+//            await viewModel.loadNextPage()
+//        }
+//    }
+//}
+
 struct FeedView: View {
 
     @StateObject private var viewModel = FeedViewModel()
+    @State private var currentID: String?
 
     var body: some View {
-        ScrollView {
+        ScrollView(.vertical) {
             LazyVStack(spacing: 0) {
                 ForEach(viewModel.videos) { video in
-                    VideoCell(
-                        video: video,
-                        onVisible: { id in
-                            viewModel.didFocusVideo(id: id)
-                        }
-                    )
-                    .containerRelativeFrame(.vertical)
-                    .id(video.id)
+                    VideoCell(video: video)
+                        .containerRelativeFrame(.vertical)
+                        .id(video.id)
                 }
             }
+            .scrollTargetLayout()
         }
         .scrollTargetBehavior(.paging)
+        .scrollPosition(id: $currentID)
         .ignoresSafeArea()
+
+        // 👇 สำคัญมาก
         .onChange(of: viewModel.videos) { videos in
-            if let first = videos.first {
-                viewModel.didFocusVideo(id: first.id)
+            if currentID == nil {
+                currentID = videos.first?.id
             }
         }
-        .onReceive(NotificationCenter.default.publisher(
-            for: UIApplication.didBecomeActiveNotification
-        )) { _ in
-            if let id = viewModel.videos.first?.id {
-                viewModel.didFocusVideo(id: id)
-            }
+
+        .onChange(of: currentID) { id in
+            guard let id else { return }
+            viewModel.didFocusVideo(id: id)
+        }
+
+        .task {
+            await viewModel.loadNextPage()
         }
     }
 }
@@ -71,6 +111,10 @@ final class FeedViewModel: ObservableObject {
     private var page = 0
     private var isLoading = false
     private let maxCache = 30
+    
+    private var currentPlayingID: String?
+    private var playStartTime: Date?
+    private var lastIndex: Int?
 
     init(repository: FeedRepositoryProtocol = MockFeedRepository()) {
         self.repository = repository
@@ -94,14 +138,25 @@ final class FeedViewModel: ObservableObject {
     }
 
     func didFocusVideo(id: String) {
+
+        guard currentPlayingID != id else { return }
+        currentPlayingID = id
+
         guard let index = videos.firstIndex(where: { $0.id == id }) else { return }
 
-        VideoPlaybackController.shared.play(video: videos[index])
+        let video = videos[index]
 
-        // preload next
-        VideoPlaybackController.shared.preloadNext(
-            video: videos[safe: index + 1]
-        )
+        VideoEngine.shared.play(video: video)
+
+        // Direction detection
+        let direction = (lastIndex ?? 0) < index ? 1 : -1
+        lastIndex = index
+
+        if direction == 1 {
+            VideoEngine.shared.preload(video: videos[safe: index + 1])
+        } else {
+            VideoEngine.shared.preload(video: videos[safe: index - 1])
+        }
 
         if index >= videos.count - 3 {
             Task { await loadNextPage() }
@@ -112,46 +167,19 @@ final class FeedViewModel: ObservableObject {
 struct VideoCell: View {
 
     let video: VideoItem
-    let onVisible: (String) -> Void
-
-    @State private var hasTriggered = false
 
     var body: some View {
         ZStack {
             PlayerLayerView()
         }
         .ignoresSafeArea()
-        .background(
-            GeometryReader { geo in
-                Color.clear
-                    .onChange(of: geo.frame(in: .global)) { frame in
-                        let screenHeight = UIScreen.main.bounds.height
-
-                        let visibleHeight = max(0,
-                            min(frame.maxY, screenHeight) -
-                            max(frame.minY, 0)
-                        )
-
-                        let percent = visibleHeight / screenHeight
-
-                        if percent > 0.7 {
-                            if !hasTriggered {
-                                hasTriggered = true
-                                onVisible(video.id)
-                            }
-                        } else {
-                            hasTriggered = false
-                        }
-                    }
-            }
-        )
     }
 }
 
 struct PlayerLayerView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> PlayerContainerView {
-        PlayerContainerView()
+        PlayerContainerView(player: VideoEngine.shared.playerForDisplay())
     }
 
     func updateUIView(_ uiView: PlayerContainerView, context: Context) {}
@@ -161,10 +189,10 @@ final class PlayerContainerView: UIView {
 
     private let playerLayer = AVPlayerLayer()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(player: AVPlayer) {
+        super.init(frame: .zero)
 
-        playerLayer.player = VideoPlaybackController.shared.player
+        playerLayer.player = player
         playerLayer.videoGravity = .resizeAspectFill
         layer.addSublayer(playerLayer)
     }
@@ -177,99 +205,145 @@ final class PlayerContainerView: UIView {
     }
 }
 
-@MainActor
-final class VideoPlaybackController: ObservableObject {
-    
+extension Array {
+    subscript(safe index: Index) -> Element? {
+        indices.contains(index) ? self[index] : nil
+    }
+}
 
-    static let shared = VideoPlaybackController()
-    private var preloadedItem: AVPlayerItem?
-    private var playStartDate: Date?
+final class AnalyticsManager {
 
-    let player = AVPlayer()
-    @Published var currentVideoID: String?
-    @Published var isMuted: Bool = true
+    static let shared = AnalyticsManager()
+
+    private var buffer: [(id: String, duration: Double)] = []
+
+    func trackWatch(id: String, duration: Double) {
+        buffer.append((id, duration))
+
+        if buffer.count >= 5 {
+            flush()
+        }
+    }
+
+    func flush() {
+        guard !buffer.isEmpty else { return }
+
+        print("Sending batch:", buffer)
+
+        // send to backend here
+
+        buffer.removeAll()
+    }
+}
+
+final class VideoEngine: ObservableObject {
+
+    static let shared = VideoEngine()
+
+    @Published private(set) var state: PlaybackState = .idle
+
+    private let displayPlayer = AVPlayer()
+    private let preloadPlayer = AVPlayer()
+
+    private var currentID: String?
+    private var cancellables = Set<AnyCancellable>()
 
     private init() {
+        configure(displayPlayer)
+        configure(preloadPlayer)
+        observeAppLifecycle()
+        observeMemoryPressure()
+        observeLoop()
+//        displayPlayer.automaticallyWaitsToMinimizeStalling = true
+//        displayPlayer.preferredPeakBitRate = 0
+    }
+
+    // MARK: - Setup
+
+    private func configure(_ player: AVPlayer) {
         player.actionAtItemEnd = .none
         player.automaticallyWaitsToMinimizeStalling = false
+    }
 
+    private func observeLoop() {
         NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.player.seek(to: .zero)
-            self?.player.play()
+            self?.displayPlayer.seek(to: .zero)
+            self?.displayPlayer.play()
         }
-        
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
-        try? AVAudioSession.sharedInstance().setActive(true)
+    }
+
+    // MARK: - Public
+
+    func playerForDisplay() -> AVPlayer {
+        displayPlayer
     }
 
     func play(video: VideoItem) {
-        guard currentVideoID != video.id else { return }
 
-        // 🔥 Watch time log ตัวก่อนหน้า
-        if let currentVideoID {
-            logWatchTime(for: currentVideoID)
-        }
+        guard currentID != video.id else { return }
 
-        let item: AVPlayerItem
-
-        if let preloadedItem {
-            item = preloadedItem
-            self.preloadedItem = nil
-        } else {
-            item = AVPlayerItem(url: video.url)
-        }
-
-        item.preferredForwardBufferDuration = 5
-
-        player.replaceCurrentItem(with: item)
-        player.isMuted = isMuted
-        player.play()
-
-        playStartDate = Date()
-        currentVideoID = video.id
-    }
-
-    func stop() {
-        if let currentVideoID {
-            logWatchTime(for: currentVideoID)
-        }
-        player.pause()
-    }
-
-    func toggleMute() {
-        isMuted.toggle()
-        player.isMuted = isMuted
-    }
-    
-    func preloadNext(video: VideoItem?) {
-        guard let video else { return }
+        state = .loading
 
         let item = AVPlayerItem(url: video.url)
         item.preferredForwardBufferDuration = 5
 
-        // trigger loading
-        item.asset.loadValuesAsynchronously(forKeys: ["playable"])
+        displayPlayer.replaceCurrentItem(with: item)
+        displayPlayer.play()
 
-        preloadedItem = item
+        currentID = video.id
+        state = .playing
     }
-    
-    private func logWatchTime(for id: String) {
-        guard playStartDate != nil else { return }
 
-        let duration = player.currentTime().seconds
+    func preload(video: VideoItem?) {
 
-        print("Video \(id) watched \(duration) sec")
+        guard let video else { return }
 
-        // 🔥 ตรงนี้ส่ง backend analytics
+        let item = AVPlayerItem(url: video.url)
+        item.preferredForwardBufferDuration = 3
+
+        preloadPlayer.replaceCurrentItem(with: item)
     }
-}
 
-extension Array {
-    subscript(safe index: Index) -> Element? {
-        indices.contains(index) ? self[index] : nil
+    func swapToPreloaded() {
+
+        guard let nextItem = preloadPlayer.currentItem else { return }
+
+        displayPlayer.replaceCurrentItem(with: nextItem)
+        displayPlayer.play()
+    }
+
+    // MARK: - Lifecycle
+
+    private func observeMemoryPressure() {
+        NotificationCenter.default.addObserver(
+            forName: UIApplication.didReceiveMemoryWarningNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.preloadPlayer.replaceCurrentItem(with: nil)
+        }
+    }
+
+    private func observeAppLifecycle() {
+
+        NotificationCenter.default.publisher(
+            for: UIApplication.willResignActiveNotification
+        )
+        .sink { [weak self] _ in
+            self?.displayPlayer.pause()
+        }
+        .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(
+            for: UIApplication.didBecomeActiveNotification
+        )
+        .sink { [weak self] _ in
+            self?.displayPlayer.play()
+        }
+        .store(in: &cancellables)
     }
 }
