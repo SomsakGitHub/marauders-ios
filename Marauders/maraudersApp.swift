@@ -21,7 +21,7 @@ struct MaraudersApp: App {
         WindowGroup {
 //            ContentView()
 //            MapView(viewModel: MapViewDIContainer.shared.makeMapViewModel())
-            FeedSceneView()
+            FeedView()
         }
         .modelContainer(sharedModelContainer)
     }
