@@ -14,7 +14,7 @@ final class MapViewModel: ObservableObject {
     @Published var showOnboarding = true
 
     // MARK: - Dependencies
-    private let locationService: LocationServiceProtocol
+    private let locationService: LocationServiceProtocoll
     private let updateRegionUseCase: MapUseCaseProtocol
     private let sendLocationUseCase: SendLocationUseCaseProtocol
 
@@ -22,7 +22,7 @@ final class MapViewModel: ObservableObject {
 
     // MARK: - Init
     init(
-        locationService: LocationServiceProtocol = LocationService(),
+        locationService: LocationServiceProtocoll = LocationServicee(),
         updateRegionUseCase: MapUseCaseProtocol = MapUseCase(),
         sendLocationUseCase: SendLocationUseCaseProtocol
     ) {

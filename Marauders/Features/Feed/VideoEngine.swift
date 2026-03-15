@@ -49,13 +49,13 @@ final class VideoEngine: ObservableObject {
         displayPlayer
     }
 
-    func play(video: VideoItem) {
+    func play(video: VideoDTO) {
 
         guard currentID != video.id else { return }
 
         state = .loading
 
-        let item = AVPlayerItem(url: video.url)
+        let item = AVPlayerItem(url: video.videoURL)
         item.preferredForwardBufferDuration = 5
 
         displayPlayer.replaceCurrentItem(with: item)
@@ -65,11 +65,11 @@ final class VideoEngine: ObservableObject {
         state = .playing
     }
 
-    func preload(video: VideoItem?) {
+    func preload(video: VideoDTO?) {
 
         guard let video else { return }
 
-        let item = AVPlayerItem(url: video.url)
+        let item = AVPlayerItem(url: video.videoURL)
         item.preferredForwardBufferDuration = 3
 
         preloadPlayer.replaceCurrentItem(with: item)

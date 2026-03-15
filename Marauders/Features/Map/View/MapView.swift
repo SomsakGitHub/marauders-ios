@@ -22,10 +22,10 @@ struct MapView: View {
                     .transition(.opacity)
                 }
 
-            case .denied, .restricted:
-                LocationPermissionBlocker {
-                    viewModel.requestPermission()
-                }
+//            case .denied, .restricted:
+//                LocationPermissionBlocker {
+//                    viewModel.requestPermission()
+//                }
 
             default:
                 EmptyView()

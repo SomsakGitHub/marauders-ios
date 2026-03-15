@@ -11,9 +11,10 @@ import Combine
 @MainActor
 final class FeedViewModel: ObservableObject {
 
-    @Published var videos: [VideoItem] = []
+    @Published var videos: [VideoDTO] = []
 
-    private let repository: FeedRepositoryProtocol
+//    private let repository: FeedRepositoryProtocol
+    private let fetchVideoUseCase: FetchVideoUseCaseProtocol
     private var page = 0
     private var isLoading = false
     private let maxCache = 30
@@ -22,8 +23,8 @@ final class FeedViewModel: ObservableObject {
     private var playStartTime: Date?
     private var lastIndex: Int?
 
-    init(repository: FeedRepositoryProtocol = FeedRepository()) {
-        self.repository = repository
+    init(fetchVideoUseCase: FetchVideoUseCaseProtocol) {
+        self.fetchVideoUseCase = fetchVideoUseCase
         Task { await loadNextPage() }
     }
 
@@ -33,9 +34,12 @@ final class FeedViewModel: ObservableObject {
         defer { isLoading = false }
 
         page += 1
-        let newItems = try? await repository.fetch(page: page)
+//        let newItems = try? await repository.fetch(page: page)
+//        let newItems = try? await self.sendLocationUseCase.execute(dto: page)
+        let newItems = try? await self.fetchVideoUseCase.execute(page: page)
+        
 
-        videos.append(contentsOf: newItems ?? [])
+        videos.append(contentsOf: newItems?.data ?? [])
 
         // Memory limit
         if videos.count > maxCache {

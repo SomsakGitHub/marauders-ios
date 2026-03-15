@@ -10,7 +10,7 @@ import AVFoundation
 
 struct VideoCell: View {
 
-    let video: VideoItem
+    let video: VideoDTO
 
     var body: some View {
         ZStack {

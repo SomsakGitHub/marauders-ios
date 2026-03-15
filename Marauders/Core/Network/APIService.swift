@@ -11,10 +11,21 @@ final class NetworkClient: NetworkClientProtocol {
         let urlRequest = try buildRequest(request)
         
         let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        
+        // print raw data
+        if let jsonString = String(data: data, encoding: .utf8) {
+            print("Response JSON:", jsonString)
+        }
 
         try validate(response: response, data: data)
 
-        return try JSONDecoder().decode(T.self, from: data)
+        do {
+            return try JSONDecoder().decode(T.self, from: data)
+        } catch {
+            print("❌ Decode error:", error)
+            print(String(data: data, encoding: .utf8) ?? "")
+            throw error
+        }
     }
 
     func sendVoid(_ request: APIRequest) async throws {
@@ -47,6 +58,7 @@ enum APIError: Error {
     case unknown
 }
 
+
 extension NetworkClient {
     private func buildRequest(_ request: APIRequest) throws -> URLRequest {
         let url = request.baseURL.appendingPathComponent(request.path)
@@ -66,6 +78,8 @@ enum HTTPMethod: String {
     case put = "PUT"
     case delete = "DELETE"
 }
+
+struct EmptyResponse: Decodable {}
 
 //import Foundation
 //

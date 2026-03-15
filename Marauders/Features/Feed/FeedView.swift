@@ -9,8 +9,12 @@ import SwiftUI
 
 struct FeedView: View {
 
-    @StateObject private var viewModel = FeedViewModel()
+    @StateObject private var viewModel: FeedViewModel
     @State private var currentID: String?
+    
+    public init(viewModel: FeedViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
 
     var body: some View {
         ScrollView(.vertical) {

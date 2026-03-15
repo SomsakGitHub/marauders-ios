@@ -1,13 +1,13 @@
 import CoreLocation
 import Combine
 
-protocol LocationServiceProtocol {
+protocol LocationServiceProtocoll {
     var authorizationStatusPublisher: AnyPublisher<CLAuthorizationStatus, Never> { get }
     var locationPublisher: AnyPublisher<CLLocation, Never> { get }
     func requestAuthorization()
 }
 
-final class LocationService: NSObject, LocationServiceProtocol {
+final class LocationServicee: NSObject, LocationServiceProtocoll {
 
     private let manager = CLLocationManager()
 
@@ -36,7 +36,7 @@ final class LocationService: NSObject, LocationServiceProtocol {
     }
 }
 
-extension LocationService: CLLocationManagerDelegate {
+extension LocationServicee: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         authorizationStatus = manager.authorizationStatus
     }

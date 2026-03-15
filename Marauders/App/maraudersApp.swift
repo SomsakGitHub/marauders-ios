@@ -4,6 +4,9 @@ import SwiftData
 
 @main
 struct MaraudersApp: App {
+    
+    var isPass = false
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -16,14 +19,13 @@ struct MaraudersApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+    
+    let container = AppDIContainer()
 
     var body: some Scene {
         WindowGroup {
-//            ContentView()
-//            MapView(viewModel: MapViewDIContainer.shared.makeMapViewModel())
-            FeedView()
-        }
-        .modelContainer(sharedModelContainer)
+            AppCoordinator(container: container)
+        }.modelContainer(sharedModelContainer)
     }
 }
 

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct LocationPermissionBlocker: View {
     @State private var fadeIn = false
-    var onRetry: () -> Void
+//    var onRetry: () -> Void
     
     var body: some View {
         VStack(spacing: 24) {
