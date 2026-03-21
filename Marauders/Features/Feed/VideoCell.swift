@@ -8,6 +8,14 @@
 import SwiftUI
 import AVFoundation
 
+protocol AVPlayerProvider {
+    var avPlayer: AVPlayer { get }
+}
+
+extension AVPlayer: AVPlayerProvider {
+    var avPlayer: AVPlayer { self }
+}
+
 struct VideoCell: View {
 
     let video: VideoDTO
@@ -23,7 +31,10 @@ struct VideoCell: View {
 struct PlayerLayerView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> PlayerContainerView {
-        PlayerContainerView(player: VideoEngine.shared.playerForDisplay())
+        guard let player = VideoEngine.shared.renderPlayer else {
+            fatalError("AVPlayer not available")
+        }
+        return PlayerContainerView(player: player)
     }
 
     func updateUIView(_ uiView: PlayerContainerView, context: Context) {}
@@ -36,7 +47,7 @@ final class PlayerContainerView: UIView {
     init(player: AVPlayer) {
         super.init(frame: .zero)
 
-        playerLayer.player = player
+        playerLayer.player = player   // 👈 ตรง ๆ เลย
         playerLayer.videoGravity = .resizeAspectFill
         layer.addSublayer(playerLayer)
     }

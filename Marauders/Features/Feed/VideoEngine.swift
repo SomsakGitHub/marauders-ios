@@ -3,34 +3,53 @@ import UIKit
 import AVFoundation
 import Combine
 
+protocol PlayerProtocol: AnyObject {
+    func replaceCurrentItem(with item: AVPlayerItem?)
+    func play()
+    func pause()
+    func seek(to time: CMTime)
+    var currentItem: AVPlayerItem? { get }
+
+    func configureForFeed()
+}
+
+extension AVPlayer: PlayerProtocol {
+
+    func configureForFeed() {
+        actionAtItemEnd = .none
+        automaticallyWaitsToMinimizeStalling = false
+    }
+}
+
+@MainActor
 final class VideoEngine: ObservableObject {
 
     static let shared = VideoEngine()
 
     @Published private(set) var state: PlaybackState = .idle
 
-    private let displayPlayer = AVPlayer()
-    private let preloadPlayer = AVPlayer()
+    private let displayPlayer: PlayerProtocol
+    private let preloadPlayer: PlayerProtocol
+
+    init(
+        displayPlayer: PlayerProtocol = AVPlayer(),
+        preloadPlayer: PlayerProtocol = AVPlayer()
+    ) {
+        self.displayPlayer = displayPlayer
+        self.preloadPlayer = preloadPlayer
+
+        displayPlayer.configureForFeed()
+        preloadPlayer.configureForFeed()
+
+        observeAppLifecycle()
+        observeMemoryPressure()
+        observeLoop()
+    }
 
     private var currentID: String?
     private var cancellables = Set<AnyCancellable>()
 
-    private init() {
-        configure(displayPlayer)
-        configure(preloadPlayer)
-        observeAppLifecycle()
-        observeMemoryPressure()
-        observeLoop()
-//        displayPlayer.automaticallyWaitsToMinimizeStalling = true
-//        displayPlayer.preferredPeakBitRate = 0
-    }
-
     // MARK: - Setup
-
-    private func configure(_ player: AVPlayer) {
-        player.actionAtItemEnd = .none
-        player.automaticallyWaitsToMinimizeStalling = false
-    }
 
     private func observeLoop() {
         NotificationCenter.default.addObserver(
@@ -38,15 +57,24 @@ final class VideoEngine: ObservableObject {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.displayPlayer.seek(to: .zero)
-            self?.displayPlayer.play()
+            Task { @MainActor in
+                guard let self else { return }
+                self.displayPlayer.seek(to: .zero)
+                self.displayPlayer.play()
+            }
         }
     }
 
     // MARK: - Public
 
-    func playerForDisplay() -> AVPlayer {
+    // Logic layer
+    var player: PlayerProtocol {
         displayPlayer
+    }
+
+    // UI layer
+    var renderPlayer: AVPlayer? {
+        displayPlayer as? AVPlayer
     }
 
     func play(video: VideoDTO) {
@@ -91,7 +119,9 @@ final class VideoEngine: ObservableObject {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.preloadPlayer.replaceCurrentItem(with: nil)
+            Task { @MainActor in
+                self?.preloadPlayer.replaceCurrentItem(with: nil)
+            }
         }
     }
 

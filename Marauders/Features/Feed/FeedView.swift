@@ -73,32 +73,3 @@ final class AnalyticsManager {
         buffer.removeAll()
     }
 }
-
-//struct FeedView: View {
-//
-//    @StateObject private var viewModel = FeedViewModel()
-//    @State private var currentID: String?
-//
-//    var body: some View {
-//        ScrollView(.vertical) {
-//            LazyVStack(spacing: 0) {
-//                ForEach(viewModel.videos) { video in
-//                    VideoCell(video: video)
-//                        .containerRelativeFrame(.vertical)
-//                        .id(video.id)
-//                }
-//            }
-//            .scrollTargetLayout()
-//        }
-//        .scrollTargetBehavior(.paging)
-//        .scrollPosition(id: $currentID)
-//        .ignoresSafeArea()
-//        .onChange(of: currentID) { id in
-//            guard let id else { return }
-//            viewModel.didFocusVideo(id: id)
-//        }
-//        .task {
-//            await viewModel.loadNextPage()
-//        }
-//    }
-//}

@@ -1,0 +1,26 @@
+{
+  "data": [
+    {
+      "id": "video_1",
+      "title": "First Video",
+      "description": "Test description 1",
+      "videoURL": "https://cdn.test.com/video1.mp4",
+      "thumbnailURL": "https://cdn.test.com/thumb1.jpg",
+      "durationSeconds": 15
+    },
+    {
+      "id": "video_2",
+      "title": "Second Video",
+      "description": "Test description 2",
+      "videoURL": "https://cdn.test.com/video2.mp4",
+      "thumbnailURL": "https://cdn.test.com/thumb2.jpg",
+      "durationSeconds": 20
+    }
+  ],
+  "page": 1,
+  "pageSize": 2,
+  "totalCount": 10,
+  "totalPages": 5,
+  "hasNext": true,
+  "hasPrev": false
+}

@@ -7,14 +7,33 @@
 
 import Foundation
 import Combine
+import AVFoundation
+
+protocol VideoEngineProtocol {
+    var state: PlaybackState { get }
+    var player: PlayerProtocol { get }
+    
+    func play(video: VideoDTO)
+    func preload(video: VideoDTO?)
+}
+
+protocol AnalyticsProtocol {
+    func trackWatch(id: String, duration: Double)
+    func flush()
+}
+
+extension VideoEngine: VideoEngineProtocol {}
+extension AnalyticsManager: AnalyticsProtocol {}
 
 @MainActor
 final class FeedViewModel: ObservableObject {
 
     @Published var videos: [VideoDTO] = []
 
-//    private let repository: FeedRepositoryProtocol
     private let fetchVideoUseCase: FetchVideoUseCaseProtocol
+    private let videoEngine: VideoEngineProtocol
+    private let analytics: AnalyticsProtocol
+    
     private var page = 0
     private var isLoading = false
     private let maxCache = 30
@@ -23,8 +42,15 @@ final class FeedViewModel: ObservableObject {
     private var playStartTime: Date?
     private var lastIndex: Int?
 
-    init(fetchVideoUseCase: FetchVideoUseCaseProtocol) {
+    init(
+        fetchVideoUseCase: FetchVideoUseCaseProtocol,
+        videoEngine: VideoEngineProtocol = VideoEngine.shared,
+        analytics: AnalyticsProtocol = AnalyticsManager.shared
+    ) {
         self.fetchVideoUseCase = fetchVideoUseCase
+        self.videoEngine = videoEngine
+        self.analytics = analytics
+        
         Task { await loadNextPage() }
     }
 
@@ -34,12 +60,13 @@ final class FeedViewModel: ObservableObject {
         defer { isLoading = false }
 
         page += 1
-//        let newItems = try? await repository.fetch(page: page)
-//        let newItems = try? await self.sendLocationUseCase.execute(dto: page)
-        let newItems = try? await self.fetchVideoUseCase.execute(page: page)
         
-
-        videos.append(contentsOf: newItems?.data ?? [])
+        do {
+            let response = try await fetchVideoUseCase.execute()
+            videos.append(contentsOf: response.data)
+        } catch {
+            print("❌ fetch video error:", error)
+        }
 
         // Memory limit
         if videos.count > maxCache {
@@ -56,16 +83,16 @@ final class FeedViewModel: ObservableObject {
 
         let video = videos[index]
 
-        VideoEngine.shared.play(video: video)
+        videoEngine.play(video: video)
 
         // Direction detection
         let direction = (lastIndex ?? 0) < index ? 1 : -1
         lastIndex = index
 
         if direction == 1 {
-            VideoEngine.shared.preload(video: videos[safe: index + 1])
+            videoEngine.preload(video: videos[safe: index + 1])
         } else {
-            VideoEngine.shared.preload(video: videos[safe: index - 1])
+            videoEngine.preload(video: videos[safe: index - 1])
         }
 
         if index >= videos.count - 3 {
