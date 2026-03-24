@@ -37,3 +37,28 @@ final class Item {
         self.timestamp = timestamp
     }
 }
+
+struct MainTabView: View {
+
+    let container: AppDIContainer
+
+    var body: some View {
+        TabView {
+
+            container.makeFeedView()
+                .tabItem {
+                    Label("Feed", systemImage: "house")
+                }
+
+            container.videoPickerView()
+                .tabItem {
+                    Label("Upload", systemImage: "plus.square")
+                }
+
+            container.profileView()
+                .tabItem {
+                    Label("Profile", systemImage: "person")
+                }
+        }
+    }
+}

@@ -80,6 +80,7 @@ extension AppDIContainer {
     
     func profileView() -> some View {
 
-        return ProfileView()
+//        return ProfileView()
+        return ProfileView(viewModel: MockProfileViewModel())
     }
 }

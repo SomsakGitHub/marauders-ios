@@ -26,31 +26,20 @@ struct AppCoordinator: View {
             case .onboarding:
 
                 container.makeOnboardingView {
-                    route = .feed
+                    route = .main
                 }
 
-            case .feed:
+            case .main:
 
-                container.makeFeedView()
+                MainTabView(container: container)
 
             case .locationPermissionBlocker:
 
                 container.makeLocationPermissionBlocker()
-                
-            case .videoPicker:
-
-                container.videoPickerView()
-                
-            case .profile:
-
-                container.profileView()
             }
-
         }
-        .onChange(of: scenePhase) {_, phase in
-
+        .onChange(of: scenePhase) { _, phase in
             guard phase == .active else { return }
-
             recheckPermission()
         }
     }

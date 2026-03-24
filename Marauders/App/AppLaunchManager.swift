@@ -2,10 +2,8 @@ import CoreLocation
 
 enum AppLaunchRoute: Equatable {
     case onboarding
-    case feed
+    case main   // 👈 ใช้ TabBar แทน
     case locationPermissionBlocker
-    case videoPicker
-    case profile
 }
 
 protocol AppLaunchManaging {
@@ -28,10 +26,8 @@ final class AppLaunchManager: AppLaunchManaging {
         switch status {
 
         case .authorizedAlways, .authorizedWhenInUse:
-//            return .feed
-//            return .videoPicker
-            return .profile
-            
+            return .main   // 👈 เข้า TabBar
+
         case .denied, .restricted:
             return .locationPermissionBlocker
 
