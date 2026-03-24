@@ -4,6 +4,8 @@ enum AppLaunchRoute: Equatable {
     case onboarding
     case feed
     case locationPermissionBlocker
+    case videoPicker
+    case profile
 }
 
 protocol AppLaunchManaging {
@@ -26,7 +28,9 @@ final class AppLaunchManager: AppLaunchManaging {
         switch status {
 
         case .authorizedAlways, .authorizedWhenInUse:
-            return .feed
+//            return .feed
+//            return .videoPicker
+            return .profile
             
         case .denied, .restricted:
             return .locationPermissionBlocker

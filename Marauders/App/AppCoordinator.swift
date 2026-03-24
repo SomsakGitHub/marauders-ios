@@ -36,6 +36,14 @@ struct AppCoordinator: View {
             case .locationPermissionBlocker:
 
                 container.makeLocationPermissionBlocker()
+                
+            case .videoPicker:
+
+                container.videoPickerView()
+                
+            case .profile:
+
+                container.profileView()
             }
 
         }

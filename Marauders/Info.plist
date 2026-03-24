@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>แอปต้องการเข้าถึงคลังรูปเพื่อเลือกวิดีโอ</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>แอปต้องการใช้ไมโครโฟนเพื่อบันทึกเสียงในวิดีโอ</string>
+	<key>NSCameraUsageDescription</key>
+	<string>แอปต้องการใช้กล้องเพื่อบันทึกวิดีโอ</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

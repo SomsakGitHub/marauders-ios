@@ -72,4 +72,14 @@ extension AppDIContainer {
 
         return LocationPermissionBlocker()
     }
+    
+    func videoPickerView() -> some View {
+
+        return VideoPickerView()
+    }
+    
+    func profileView() -> some View {
+
+        return ProfileView()
+    }
 }
