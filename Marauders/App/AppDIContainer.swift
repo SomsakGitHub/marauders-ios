@@ -60,10 +60,19 @@ extension AppDIContainer {
     func makeFeedViewModel() -> FeedViewModel {
         FeedViewModel(fetchVideoUseCase: makeFetchVideoUseCase())
     }
+    
+//    func makeMapViewModel() -> MapViewModel {
+//        MapViewModel(fetchVideoUseCase: makeFetchVideoUseCase())
+//    }
 
     func makeFeedView() -> some View {
 
         return FeedView(viewModel: makeFeedViewModel())
+    }
+    
+    func mapView() -> some View {
+        
+        return MapView(viewModel: MapViewDIContainer.shared.makeMapViewModel())
     }
     
     func makeLocationPermissionBlocker() -> some View {
@@ -80,7 +89,7 @@ extension AppDIContainer {
     
     func profileView() -> some View {
 
-//        return ProfileView()
-        return ProfileView(viewModel: MockProfileViewModel())
+        return MarauderMapView()
+//        return ProfileView(viewModel: MockProfileViewModel())
     }
 }

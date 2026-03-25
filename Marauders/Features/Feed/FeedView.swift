@@ -1,5 +1,5 @@
 //
-//  FeedSceneView.swift
+//  FeedView.swift
 //  marauderS
 //
 //  Created by somsak on 30/4/2568 BE.

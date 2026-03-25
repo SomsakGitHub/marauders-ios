@@ -47,7 +47,12 @@ struct MainTabView: View {
 
             container.makeFeedView()
                 .tabItem {
-                    Label("Feed", systemImage: "house")
+                    Label("Home", systemImage: "house")
+                }
+            
+            container.mapView()
+                .tabItem {
+                    Label("Map", systemImage: "house")
                 }
 
             container.videoPickerView()
