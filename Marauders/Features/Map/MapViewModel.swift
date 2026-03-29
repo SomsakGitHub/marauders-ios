@@ -14,7 +14,7 @@ final class MapViewModel: ObservableObject {
     @Published var showOnboarding = true
 
     // MARK: - Dependencies
-    private let locationService: LocationServiceProtocoll
+    private let locationService: LocationServiceProtocol
     private let updateRegionUseCase: MapUseCaseProtocol
     private let sendLocationUseCase: SendLocationUseCaseProtocol
 
@@ -22,7 +22,7 @@ final class MapViewModel: ObservableObject {
 
     // MARK: - Init
     init(
-        locationService: LocationServiceProtocoll = LocationServicee(),
+        locationService: LocationServiceProtocol = LocationService(),
         updateRegionUseCase: MapUseCaseProtocol = MapUseCase(),
         sendLocationUseCase: SendLocationUseCaseProtocol
     ) {
@@ -46,6 +46,7 @@ final class MapViewModel: ObservableObject {
             .sink { [weak self] location in
                 guard let self else { return }
                 self.userLocation = location
+                print("📍 Location:", location.coordinate)
                 self.region = self.updateRegionUseCase.updateRegion(from: location)
 
 //                Task {
@@ -63,7 +64,7 @@ final class MapViewModel: ObservableObject {
 
     // MARK: - User Actions
     func requestPermission() {
-        locationService.requestAuthorization()
+//        locationService.requestAuthorization()
     }
 
     func onMapReady() {
