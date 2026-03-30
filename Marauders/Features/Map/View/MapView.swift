@@ -3,6 +3,7 @@ import MapKit
 
 struct MapView: View {
     @StateObject private var viewModel: MapViewModel
+    @State private var showMap = false
     
     public init(viewModel: MapViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -12,12 +13,14 @@ struct MapView: View {
         ZStack {
             switch viewModel.status {
             case .authorizedAlways, .authorizedWhenInUse:
-                mapContent
+                if showMap {
+                    mapContent
+                }
 
             case .notDetermined:
                 if viewModel.showOnboarding {
                     LocationOnboardingView {
-                        viewModel.requestPermission()
+//                        viewModel.requestPermission()
                     }
                     .transition(.opacity)
                 }
@@ -31,12 +34,17 @@ struct MapView: View {
                 EmptyView()
             }
         }
-        .animation(.easeInOut, value: viewModel.status)
+        .onAppear {
+            DispatchQueue.main.async {
+                showMap = true
+            }
+        }
+        .animation(nil, value: viewModel.status)
     }
 
     private var mapContent: some View {
         CustomMap(
-            region: $viewModel.region,
+            region: .constant(viewModel.region),
             onTap: viewModel.onUserTap,
             onMapReady: viewModel.onMapReady
         )

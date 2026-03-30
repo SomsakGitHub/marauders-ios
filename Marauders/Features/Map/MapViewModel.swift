@@ -5,66 +5,54 @@ import Combine
 @MainActor
 final class MapViewModel: ObservableObject {
 
-    // MARK: - UI State
     @Published var status: CLAuthorizationStatus = .notDetermined
-    @Published var region: MKCoordinateRegion
+    @Published private(set) var region: MKCoordinateRegion
     @Published var userLocation: CLLocation?
     @Published var selectedCoordinate: CLLocationCoordinate2D?
     @Published var isMapReady = false
     @Published var showOnboarding = true
 
-    // MARK: - Dependencies
     private let locationService: LocationServiceProtocol
-    private let updateRegionUseCase: MapUseCaseProtocol
     private let sendLocationUseCase: SendLocationUseCaseProtocol
-
     private var cancellables = Set<AnyCancellable>()
 
-    // MARK: - Init
     init(
         locationService: LocationServiceProtocol = LocationService(),
-        updateRegionUseCase: MapUseCaseProtocol = MapUseCase(),
         sendLocationUseCase: SendLocationUseCaseProtocol
     ) {
         self.locationService = locationService
-        self.updateRegionUseCase = updateRegionUseCase
         self.sendLocationUseCase = sendLocationUseCase
 
-        self.region = updateRegionUseCase.updateRegion(from: nil)
+        // ✅ initial region เท่านั้น
+        self.region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 13.7563, longitude: 100.5018),
+            span: .init(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        )
 
         bind()
     }
 
-    // MARK: - Bind services
     private func bind() {
         locationService.authorizationStatusPublisher
             .receive(on: RunLoop.main)
             .assign(to: &$status)
 
         locationService.locationPublisher
-            .receive(on: RunLoop.main)
+            .removeDuplicates()
+            .throttle(for: .seconds(1), scheduler: RunLoop.main, latest: true)
             .sink { [weak self] location in
                 guard let self else { return }
-                self.userLocation = location
-                print("📍 Location:", location.coordinate)
-                self.region = self.updateRegionUseCase.updateRegion(from: location)
 
-//                Task {
-//                    let dto = LocationDTO(
-//                        latitude: location.coordinate.latitude,
-//                        longitude: location.coordinate.longitude,
-//                        accuracy: location.horizontalAccuracy,
-//                        timestamp: Date()
-//                    )
-//                    try? await self.sendLocationUseCase.execute(dto: dto)
-//                }
+                self.userLocation = location
+
+                // ❌ ไม่ update region แล้ว
+                // ให้ map control ตัวเอง
             }
             .store(in: &cancellables)
     }
 
-    // MARK: - User Actions
-    func requestPermission() {
-//        locationService.requestAuthorization()
+    func prepareMap() {
+        // ไม่ต้องทำอะไรแล้ว
     }
 
     func onMapReady() {

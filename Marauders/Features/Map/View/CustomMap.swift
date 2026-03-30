@@ -13,25 +13,32 @@ struct CustomMap: UIViewRepresentable {
         map.delegate = context.coordinator
         map.showsUserLocation = true
 
+        // 🔥 set initial region ครั้งเดียว
+        map.setRegion(region, animated: false)
+
         let tap = UITapGestureRecognizer(
             target: context.coordinator,
             action: #selector(Coordinator.handleTap)
         )
         map.addGestureRecognizer(tap)
 
-        DispatchQueue.main.async { onMapReady() }
+        // ✅ รอ map render จริง
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            onMapReady()
+        }
+
         return map
     }
 
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        if uiView.region.center.latitude != region.center.latitude ||
-           uiView.region.center.longitude != region.center.longitude {
-            uiView.setRegion(region, animated: true)
-        }
+        // ❌ ไม่ setRegion ทุกครั้ง
+        // ปล่อย map control ตัวเอง
     }
 
     final class Coordinator: NSObject, MKMapViewDelegate {
         var parent: CustomMap
+        private var currentAnnotation: MKPointAnnotation?
+        private var currentOverlay: MKCircle?
 
         init(_ parent: CustomMap) { self.parent = parent }
 
@@ -43,23 +50,43 @@ struct CustomMap: UIViewRepresentable {
 
             parent.onTap(coord)
 
-            // clear + redraw
-            mapView.removeAnnotations(mapView.annotations)
-            mapView.removeOverlays(mapView.overlays)
+            // 🔥 update เฉพาะของเก่า (ไม่ clear ทั้ง map)
+            if let annotation = currentAnnotation {
+                mapView.removeAnnotation(annotation)
+            }
 
-            mapView.addAnnotation(MKPointAnnotation(coordinate: coord))
-            mapView.addOverlay(MKCircle(center: coord, radius: 1000))
+            if let overlay = currentOverlay {
+                mapView.removeOverlay(overlay)
+            }
+
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coord
+
+            let circle = MKCircle(center: coord, radius: 1000)
+
+            mapView.addAnnotation(annotation)
+            mapView.addOverlay(circle)
+
+            currentAnnotation = annotation
+            currentOverlay = circle
+        }
+
+        func mapViewDidFinishRenderingMap(_ mapView: MKMapView, fullyRendered: Bool) {
+            if fullyRendered {
+                parent.onMapReady()
+            }
         }
 
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-            if let circle = overlay as? MKCircle {
-                let renderer = MKCircleRenderer(circle: circle)
-                renderer.strokeColor = .systemBlue
-                renderer.fillColor = UIColor.systemBlue.withAlphaComponent(0.3)
-                renderer.lineWidth = 2
-                return renderer
+            guard let circle = overlay as? MKCircle else {
+                return MKOverlayRenderer()
             }
-            return MKOverlayRenderer()
+
+            let renderer = MKCircleRenderer(circle: circle)
+            renderer.strokeColor = .systemBlue
+            renderer.fillColor = UIColor.systemBlue.withAlphaComponent(0.3)
+            renderer.lineWidth = 2
+            return renderer
         }
     }
 }
