@@ -28,22 +28,18 @@ final class VideoEngine: ObservableObject {
 
     @Published private(set) var state: PlaybackState = .idle
 
-    private let displayPlayer: PlayerProtocol
-    private let preloadPlayer: PlayerProtocol
+    private let player: AVQueuePlayer
+    private var queueItems: [String: AVPlayerItem] = [:]
 
-    init(
-        displayPlayer: PlayerProtocol = AVPlayer(),
-        preloadPlayer: PlayerProtocol = AVPlayer()
-    ) {
-        self.displayPlayer = displayPlayer
-        self.preloadPlayer = preloadPlayer
-
-        displayPlayer.configureForFeed()
-        preloadPlayer.configureForFeed()
+    init() {
+        
+        self.player = AVQueuePlayer()
+        player.actionAtItemEnd = .advance
 
         observeAppLifecycle()
-        observeMemoryPressure()
+//        observeMemoryPressure()
         observeLoop()
+        warmUp()
     }
 
     private var currentID: String?
@@ -59,70 +55,97 @@ final class VideoEngine: ObservableObject {
         ) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
-                self.displayPlayer.seek(to: .zero)
-                self.displayPlayer.play()
+                self.player.seek(to: .zero)
+                self.player.play()
             }
         }
+    }
+    
+    private func warmUp() {
+        let dummy = AVPlayerItem(url: URL(fileURLWithPath: "/dev/null"))
+        player.replaceCurrentItem(with: dummy)
+        player.pause()
+        player.removeAllItems() // 👈 สำคัญ
     }
 
     // MARK: - Public
 
     // Logic layer
-    var player: PlayerProtocol {
-        displayPlayer
-    }
+//    var player: PlayerProtocol {
+//        displayPlayer
+//    }
 
     // UI layer
-    var renderPlayer: AVPlayer? {
-        displayPlayer as? AVPlayer
+    var renderPlayer: AVPlayer {
+        player
     }
 
     func play(video: VideoDTO) {
 
         guard currentID != video.id else { return }
 
-        state = .loading
+        player.removeAllItems() // reset queue
 
-        let item = AVPlayerItem(url: video.videoURL)
-        item.preferredForwardBufferDuration = 5
+        queueItems.removeAll()
 
-        displayPlayer.replaceCurrentItem(with: item)
-        displayPlayer.play()
+        let current = AVPlayerItem(url: video.videoURL)
+        current.preferredForwardBufferDuration = 2
+
+        player.insert(current, after: nil)
 
         currentID = video.id
-        state = .playing
+        player.play()
     }
 
     func preload(video: VideoDTO?) {
-
         guard let video else { return }
 
+        if queueItems[video.id] != nil { return }
+
         let item = AVPlayerItem(url: video.videoURL)
-        item.preferredForwardBufferDuration = 3
+        item.preferredForwardBufferDuration = 2
 
-        preloadPlayer.replaceCurrentItem(with: item)
-    }
+        queueItems[video.id] = item
 
-    func swapToPreloaded() {
-
-        guard let nextItem = preloadPlayer.currentItem else { return }
-
-        displayPlayer.replaceCurrentItem(with: nextItem)
-        displayPlayer.play()
-    }
-
-    // MARK: - Lifecycle
-
-    private func observeMemoryPressure() {
-        NotificationCenter.default.addObserver(
-            forName: UIApplication.didReceiveMemoryWarningNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            Task { @MainActor in
-                self?.preloadPlayer.replaceCurrentItem(with: nil)
-            }
+        // 👉 insert ต่อท้ายตัวสุดท้าย
+        if let last = player.items().last {
+            player.insert(item, after: last)
+        } else {
+            player.insert(item, after: nil)
         }
+
+        trimQueueIfNeeded()
+    }
+    
+    private func trimQueueIfNeeded() {
+        let items = player.items()
+
+        if items.count > 3 {
+            player.remove(items.first!)
+        }
+    }
+    
+    func playNext(video: VideoDTO) {
+
+        guard currentID != video.id else { return }
+
+        currentID = video.id
+
+        if let next = player.items().dropFirst().first,
+           let asset = next.asset as? AVURLAsset,
+           asset.url == video.videoURL {
+
+            player.advanceToNextItem()
+
+        } else {
+            // fallback
+            player.removeAllItems()
+
+            let item = AVPlayerItem(url: video.videoURL)
+            player.insert(item, after: nil)
+        }
+
+        player.play()
     }
 
     private func observeAppLifecycle() {
@@ -131,7 +154,7 @@ final class VideoEngine: ObservableObject {
             for: UIApplication.willResignActiveNotification
         )
         .sink { [weak self] _ in
-            self?.displayPlayer.pause()
+            self?.player.pause()
         }
         .store(in: &cancellables)
 
@@ -139,7 +162,7 @@ final class VideoEngine: ObservableObject {
             for: UIApplication.didBecomeActiveNotification
         )
         .sink { [weak self] _ in
-            self?.displayPlayer.play()
+            self?.player.play()
         }
         .store(in: &cancellables)
     }

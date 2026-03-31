@@ -46,6 +46,13 @@ struct FeedView: View {
         .task {
             await viewModel.loadNextPage()
         }
+        
+        .onAppear {
+            if let first = viewModel.videos.first {
+                currentID = first.id
+                viewModel.didFocusVideo(id: first.id)
+            }
+        }
     }
 }
 

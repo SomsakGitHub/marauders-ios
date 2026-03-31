@@ -10,10 +10,10 @@ import Combine
 import AVFoundation
 
 protocol VideoEngineProtocol {
-    var state: PlaybackState { get }
-    var player: PlayerProtocol { get }
-    
+    var renderPlayer: AVPlayer { get }
+
     func play(video: VideoDTO)
+    func playNext(video: VideoDTO)
     func preload(video: VideoDTO?)
 }
 
@@ -51,7 +51,13 @@ final class FeedViewModel: ObservableObject {
         self.videoEngine = videoEngine
         self.analytics = analytics
         
-        Task { await loadNextPage() }
+        Task {
+            await loadNextPage()
+
+            if let first = videos.first {
+                videoEngine.preload(video: first)
+            }
+        }
     }
 
     func loadNextPage() async {
@@ -76,27 +82,20 @@ final class FeedViewModel: ObservableObject {
 
     func didFocusVideo(id: String) {
 
-        guard currentPlayingID != id else { return }
-        currentPlayingID = id
-
         guard let index = videos.firstIndex(where: { $0.id == id }) else { return }
 
         let video = videos[index]
 
-        videoEngine.play(video: video)
-
-        // Direction detection
-        let direction = (lastIndex ?? 0) < index ? 1 : -1
-        lastIndex = index
-
-        if direction == 1 {
-            videoEngine.preload(video: videos[safe: index + 1])
+        if currentPlayingID == nil {
+            videoEngine.play(video: video) // first
         } else {
-            videoEngine.preload(video: videos[safe: index - 1])
+            videoEngine.playNext(video: video) // 👈 smooth scroll
         }
 
-        if index >= videos.count - 3 {
-            Task { await loadNextPage() }
-        }
+        currentPlayingID = id
+
+        // preload ล่วงหน้า 2 ตัว
+        videoEngine.preload(video: videos[safe: index + 1])
+        videoEngine.preload(video: videos[safe: index + 2])
     }
 }

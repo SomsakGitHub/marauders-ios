@@ -31,9 +31,7 @@ struct VideoCell: View {
 struct PlayerLayerView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> PlayerContainerView {
-        guard let player = VideoEngine.shared.renderPlayer else {
-            fatalError("AVPlayer not available")
-        }
+        let player = VideoEngine.shared.renderPlayer
         return PlayerContainerView(player: player)
     }
 
