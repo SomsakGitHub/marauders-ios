@@ -31,8 +31,18 @@ struct CustomMap: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        // ❌ ไม่ setRegion ทุกครั้ง
-        // ปล่อย map control ตัวเอง
+        let currentCenter = uiView.region.center
+
+        // กัน set ซ้ำ
+        if abs(currentCenter.latitude - region.center.latitude) > 0.0001 ||
+           abs(currentCenter.longitude - region.center.longitude) > 0.0001 {
+            
+            uiView.setRegion(region, animated: true)
+        }
+    }
+    
+    func testSWiftLint() {
+        
     }
 
     final class Coordinator: NSObject, MKMapViewDelegate {

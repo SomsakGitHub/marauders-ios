@@ -199,7 +199,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 067D4B642EC42F5400AA9602 /* Build configuration list for PBXProject "Marauders" */;
+			buildConfigurationList = 067D4B642EC42F5400AA9602 /* Build configuration list for PBXProject "marauders" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -346,6 +346,7 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WARNING_CFLAGS = "";
 			};
 			name = Debug;
 		};
@@ -404,6 +405,7 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
+				WARNING_CFLAGS = "";
 			};
 			name = Release;
 		};
@@ -439,6 +441,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				WARNING_CFLAGS = "";
 			};
 			name = Debug;
 		};
@@ -474,6 +477,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				WARNING_CFLAGS = "";
 			};
 			name = Release;
 		};
@@ -560,7 +564,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		067D4B642EC42F5400AA9602 /* Build configuration list for PBXProject "Marauders" */ = {
+		067D4B642EC42F5400AA9602 /* Build configuration list for PBXProject "marauders" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				067D4B8A2EC42F5500AA9602 /* Debug */,

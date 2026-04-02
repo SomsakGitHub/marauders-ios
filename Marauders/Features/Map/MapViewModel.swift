@@ -11,6 +11,7 @@ final class MapViewModel: ObservableObject {
     @Published var selectedCoordinate: CLLocationCoordinate2D?
     @Published var isMapReady = false
     @Published var showOnboarding = true
+    private var hasCenteredToUser = false
 
     private let locationService: LocationServiceProtocol
     private let sendLocationUseCase: SendLocationUseCaseProtocol
@@ -45,8 +46,14 @@ final class MapViewModel: ObservableObject {
 
                 self.userLocation = location
 
-                // ❌ ไม่ update region แล้ว
-                // ให้ map control ตัวเอง
+                // ✅ center map ครั้งแรกเท่านั้น
+                if !self.hasCenteredToUser {
+                    self.region = MKCoordinateRegion(
+                        center: location.coordinate,
+                        span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                    )
+                    self.hasCenteredToUser = true
+                }
             }
             .store(in: &cancellables)
     }
@@ -61,5 +68,14 @@ final class MapViewModel: ObservableObject {
 
     func onUserTap(_ coord: CLLocationCoordinate2D) {
         selectedCoordinate = coord
+    }
+    
+    var regionBinding: Binding<MKCoordinateRegion> {
+        Binding(
+            get: { self.region },
+            set: { [weak self] newValue in
+                self?.region = newValue
+            }
+        )
     }
 }

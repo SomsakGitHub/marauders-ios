@@ -65,9 +65,9 @@ extension AppDIContainer {
 //        MapViewModel(fetchVideoUseCase: makeFetchVideoUseCase())
 //    }
 
-    func makeFeedView() -> some View {
+    func makeFeedView(selectedTab: Int ) -> some View {
 
-        return FeedView(viewModel: makeFeedViewModel())
+        return FeedView(viewModel: makeFeedViewModel(), selectedTab: selectedTab)
     }
     
     func mapView() -> some View {

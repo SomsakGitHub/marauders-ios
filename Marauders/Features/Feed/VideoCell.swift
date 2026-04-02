@@ -19,33 +19,42 @@ extension AVPlayer: AVPlayerProvider {
 struct VideoCell: View {
 
     let video: VideoDTO
+    let isActive: Bool
 
     var body: some View {
-        ZStack {
-            PlayerLayerView()
-        }
-        .ignoresSafeArea()
+        PlayerLayerView(isActive: isActive)
+            .ignoresSafeArea()
     }
 }
 
 struct PlayerLayerView: UIViewRepresentable {
+    
+    let isActive: Bool
 
     func makeUIView(context: Context) -> PlayerContainerView {
         let player = VideoEngine.shared.renderPlayer
         return PlayerContainerView(player: player)
     }
 
-    func updateUIView(_ uiView: PlayerContainerView, context: Context) {}
+    func updateUIView(_ uiView: PlayerContainerView, context: Context) {
+        if isActive {
+            uiView.play()
+        } else {
+            uiView.pause()
+        }
+    }
 }
 
 final class PlayerContainerView: UIView {
 
     private let playerLayer = AVPlayerLayer()
+    private let player: AVPlayer
 
     init(player: AVPlayer) {
+        self.player = player
         super.init(frame: .zero)
 
-        playerLayer.player = player   // 👈 ตรง ๆ เลย
+        playerLayer.player = player
         playerLayer.videoGravity = .resizeAspectFill
         layer.addSublayer(playerLayer)
     }
@@ -55,5 +64,13 @@ final class PlayerContainerView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         playerLayer.frame = bounds
+    }
+
+    func play() {
+        player.play()
+    }
+
+    func pause() {
+        player.pause()
     }
 }

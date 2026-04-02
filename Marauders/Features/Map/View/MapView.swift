@@ -44,7 +44,7 @@ struct MapView: View {
 
     private var mapContent: some View {
         CustomMap(
-            region: .constant(viewModel.region),
+            region: viewModel.regionBinding,
             onTap: viewModel.onUserTap,
             onMapReady: viewModel.onMapReady
         )

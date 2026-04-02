@@ -41,29 +41,34 @@ final class Item {
 struct MainTabView: View {
 
     let container: AppDIContainer
+    @State private var selectedTab = 0
 
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
 
-            container.makeFeedView()
+            container.makeFeedView(selectedTab: selectedTab)
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
+                .tag(0)
             
             container.mapView()
                 .tabItem {
-                    Label("Map", systemImage: "house")
+                    Label("Map", systemImage: "map")
                 }
+                .tag(1)
 
             container.videoPickerView()
                 .tabItem {
                     Label("Upload", systemImage: "plus.square")
                 }
+                .tag(2)
 
             container.profileView()
                 .tabItem {
                     Label("Profile", systemImage: "person")
                 }
+                .tag(3)
         }
     }
 }

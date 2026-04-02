@@ -11,16 +11,18 @@ struct FeedView: View {
 
     @StateObject private var viewModel: FeedViewModel
     @State private var currentID: String?
+    let selectedTab: Int
     
-    public init(viewModel: FeedViewModel) {
+    public init(viewModel: FeedViewModel, selectedTab: Int) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.selectedTab = selectedTab
     }
 
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack(spacing: 0) {
                 ForEach(viewModel.videos) { video in
-                    VideoCell(video: video)
+                    VideoCell(video: video, isActive: selectedTab == 0)
                         .containerRelativeFrame(.vertical)
                         .id(video.id)
                 }
