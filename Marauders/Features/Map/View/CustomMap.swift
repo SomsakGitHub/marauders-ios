@@ -49,6 +49,7 @@ struct CustomMap: UIViewRepresentable {
         var parent: CustomMap
         private var currentAnnotation: MKPointAnnotation?
         private var currentOverlay: MKCircle?
+        private var isUserInteraction = false
 
         init(_ parent: CustomMap) { self.parent = parent }
 
@@ -97,6 +98,17 @@ struct CustomMap: UIViewRepresentable {
             renderer.fillColor = UIColor.systemBlue.withAlphaComponent(0.3)
             renderer.lineWidth = 2
             return renderer
+        }
+        
+        func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+            isUserInteraction = true
+        }
+        
+        func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+            if isUserInteraction {
+                parent.region = mapView.region
+            }
+            isUserInteraction = false
         }
     }
 }
