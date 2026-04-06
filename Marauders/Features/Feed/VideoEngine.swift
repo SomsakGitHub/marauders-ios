@@ -34,7 +34,8 @@ final class VideoEngine: ObservableObject {
     init() {
         
         self.player = AVQueuePlayer()
-        player.actionAtItemEnd = .advance
+        player.actionAtItemEnd = .none
+        player.automaticallyWaitsToMinimizeStalling = false // 👈 ใส่ตรงนี้
 
         observeAppLifecycle()
 //        observeMemoryPressure()
@@ -50,14 +51,12 @@ final class VideoEngine: ObservableObject {
     private func observeLoop() {
         NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
-            object: nil,
+            object: player.currentItem, // 👈 สำคัญ
             queue: .main
         ) { [weak self] _ in
-            Task { @MainActor in
-                guard let self else { return }
-                self.player.seek(to: .zero)
-                self.player.play()
-            }
+            guard let self else { return }
+            self.player.seek(to: .zero)
+            self.player.play()
         }
     }
     
