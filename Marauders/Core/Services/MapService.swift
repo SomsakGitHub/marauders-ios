@@ -13,19 +13,3 @@ final class LocationNetworkService: LocationNetworkServiceProtocol {
         try await client.sendVoid(LocationAPI.updateLocation(dto))
     }
 }
-
-//final class MapService {
-//    private let api: APIServiceProtocol
-//
-//    init(api: APIServiceProtocol) {
-//        self.api = api
-//    }
-//
-//    func saveCoordinate(coord: Coordinate, completion: @escaping (Result<[Coordinate], Error>) -> Void) {
-//        api.request(endpoint: "http://127.0.0.1:8080/health",
-//                    method: "GET",
-//                    completion: completion)
-//    }
-//}
-//
-//

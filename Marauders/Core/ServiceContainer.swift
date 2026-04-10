@@ -11,6 +11,7 @@ protocol APIRequest {
 enum LocationAPI: APIRequest {
     case updateLocation(LocationDTO)
     case fetchVideo
+    case uploadVideo
 
     var baseURL: URL { URL(string: "http://192.168.1.164:8080/v1/")! }
 
@@ -18,12 +19,13 @@ enum LocationAPI: APIRequest {
         switch self {
         case .updateLocation: return "location/update"
         case .fetchVideo: return "videos/feed"
+        case .uploadVideo: return "videos/upload"
         }
     }
 
     var method: HTTPMethod {
         switch self {
-        case .updateLocation: return .post
+        case .updateLocation, .uploadVideo: return .post
         case .fetchVideo: return .get
         }
     }
@@ -37,6 +39,8 @@ enum LocationAPI: APIRequest {
         case .updateLocation(let dto):
             return try? JSONEncoder().encode(dto)
         case .fetchVideo:
+            return nil
+        case .uploadVideo:
             return nil
         }
     }

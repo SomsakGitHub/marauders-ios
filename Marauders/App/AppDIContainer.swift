@@ -46,19 +46,35 @@ extension AppDIContainer {
         FeedNetworkService(client: makeNetworkClient())
     }
     
+    private func makeVideoPickerNetworkService() -> VideoPickerNetworkServiceProtocol {
+        VideoPickerNetworkService(client: makeNetworkClient())
+    }
+    
     // MARK: – Factory: Repository
     func makeFeedRepository() -> FeedRepositoryProtocol {
         FeedRepository(service: makeFeedNetworkService())
+    }
+    
+    func makeVideoPickerRepository() -> VideoPickerRepositoryProtocol {
+        VideoPickerRepository(service: makeVideoPickerNetworkService())
     }
     
     // MARK: – Factory: UseCase
     func makeFetchVideoUseCase() -> FetchVideoUseCaseProtocol {
         DefaultFetchVideoUseCase(repo: makeFeedRepository())
     }
+    
+    func makeVideoPickerUseCase() -> VideoPickerUseCaseProtocol {
+        DefaultVideoPickerUseCase(repo: makeVideoPickerRepository())
+    }
 
     // MARK: – Factory: ViewModel
     func makeFeedViewModel() -> FeedViewModel {
         FeedViewModel(fetchVideoUseCase: makeFetchVideoUseCase())
+    }
+    
+    func makeVideoPickerViewModel() -> VideoPickerViewModel {
+        VideoPickerViewModel(useCase: makeVideoPickerUseCase())
     }
     
 //    func makeMapViewModel() -> MapViewModel {
@@ -84,7 +100,7 @@ extension AppDIContainer {
     
     func videoPickerView() -> some View {
 
-        return VideoPickerView()
+        return VideoPickerView(viewModel: makeVideoPickerViewModel())
     }
     
     func profileView() -> some View {
