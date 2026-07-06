@@ -105,7 +105,7 @@ extension AppDIContainer {
     
     func profileView() -> some View {
 
-        return MarauderMapView()
-//        return ProfileView(viewModel: MockProfileViewModel())
+//        return MarauderMapView()
+        return ProfileView(viewModel: MockProfileViewModel())
     }
 }

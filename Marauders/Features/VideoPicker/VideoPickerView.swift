@@ -121,5 +121,3 @@ func uploadVideo(url: URL) {
         }
     }.resume()
 }
-
-//test
