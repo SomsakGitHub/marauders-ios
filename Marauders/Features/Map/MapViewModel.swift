@@ -6,8 +6,8 @@ import Combine
 final class MapViewModel: ObservableObject {
 
     @Published var status: CLAuthorizationStatus = .notDetermined
-    @Published private(set) var region: MKCoordinateRegion
-    @Published var userLocation: CLLocation?
+    private(set) var region: MKCoordinateRegion
+    private(set) var userLocation: CLLocation?
     @Published var selectedCoordinate: CLLocationCoordinate2D?
     @Published var isMapReady = false
     @Published var showOnboarding = true
@@ -48,18 +48,19 @@ final class MapViewModel: ObservableObject {
 
                 // ✅ center map ครั้งแรกเท่านั้น
                 if !self.hasCenteredToUser {
+
                     self.region = MKCoordinateRegion(
                         center: location.coordinate,
-                        span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                        span: .init(
+                            latitudeDelta: 0.01,
+                            longitudeDelta: 0.01
+                        )
                     )
+
                     self.hasCenteredToUser = true
                 }
             }
             .store(in: &cancellables)
-    }
-
-    func prepareMap() {
-        // ไม่ต้องทำอะไรแล้ว
     }
 
     func onMapReady() {
@@ -68,14 +69,5 @@ final class MapViewModel: ObservableObject {
 
     func onUserTap(_ coord: CLLocationCoordinate2D) {
         selectedCoordinate = coord
-    }
-    
-    var regionBinding: Binding<MKCoordinateRegion> {
-        Binding(
-            get: { self.region },
-            set: { [weak self] newValue in
-                self?.region = newValue
-            }
-        )
     }
 }

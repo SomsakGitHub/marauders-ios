@@ -2,43 +2,33 @@ import SwiftUI
 import MapKit
 
 struct CustomMap: UIViewRepresentable {
-    @Binding var region: MKCoordinateRegion
+    let initialRegion: MKCoordinateRegion
     var onTap: (CLLocationCoordinate2D) -> Void
     var onMapReady: () -> Void
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
     func makeUIView(context: Context) -> MKMapView {
+
         let map = MKMapView()
+
         map.delegate = context.coordinator
         map.showsUserLocation = true
 
-        // 🔥 set initial region ครั้งเดียว
-        map.setRegion(region, animated: false)
+        map.setRegion(initialRegion, animated: false)
 
         let tap = UITapGestureRecognizer(
             target: context.coordinator,
             action: #selector(Coordinator.handleTap)
         )
-        map.addGestureRecognizer(tap)
 
-        // ✅ รอ map render จริง
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            onMapReady()
-        }
+        map.addGestureRecognizer(tap)
 
         return map
     }
 
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        let currentCenter = uiView.region.center
 
-        // กัน set ซ้ำ
-        if abs(currentCenter.latitude - region.center.latitude) > 0.0001 ||
-           abs(currentCenter.longitude - region.center.longitude) > 0.0001 {
-            
-            uiView.setRegion(region, animated: true)
-        }
     }
     
     func testSWiftLint() {
@@ -49,7 +39,7 @@ struct CustomMap: UIViewRepresentable {
         var parent: CustomMap
         private var currentAnnotation: MKPointAnnotation?
         private var currentOverlay: MKCircle?
-        private var isUserInteraction = false
+        private var didNotifyReady = false
 
         init(_ parent: CustomMap) { self.parent = parent }
 
@@ -82,10 +72,22 @@ struct CustomMap: UIViewRepresentable {
             currentOverlay = circle
         }
 
-        func mapViewDidFinishRenderingMap(_ mapView: MKMapView, fullyRendered: Bool) {
-            if fullyRendered {
-                parent.onMapReady()
+        func mapViewDidFinishRenderingMap(
+            _ mapView: MKMapView,
+            fullyRendered: Bool
+        ) {
+
+            guard fullyRendered else {
+                return
             }
+
+            guard !didNotifyReady else {
+                return
+            }
+
+            didNotifyReady = true
+
+            parent.onMapReady()
         }
 
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -98,17 +100,6 @@ struct CustomMap: UIViewRepresentable {
             renderer.fillColor = UIColor.systemBlue.withAlphaComponent(0.3)
             renderer.lineWidth = 2
             return renderer
-        }
-        
-        func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-            isUserInteraction = true
-        }
-        
-        func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-            if isUserInteraction {
-                parent.region = mapView.region
-            }
-            isUserInteraction = false
         }
     }
 }
