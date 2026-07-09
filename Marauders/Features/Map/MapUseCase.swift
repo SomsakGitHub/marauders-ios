@@ -46,3 +46,24 @@ final class MockMapUseCase: MapUseCaseProtocol {
         )
     }
 }
+
+protocol VideoRepositoryProtocol {
+    func getPopularVideos() async throws -> [VideoLocation]
+}
+
+protocol GetPopularVideosUseCaseProtocol {
+    func execute() async throws -> [VideoLocation]
+}
+
+final class GetPopularVideosUseCase: GetPopularVideosUseCaseProtocol {
+
+    private let repository: VideoRepositoryProtocol
+
+    init(repository: VideoRepositoryProtocol) {
+        self.repository = repository
+    }
+
+    func execute() async throws -> [VideoLocation] {
+        try await repository.getPopularVideos()
+    }
+}

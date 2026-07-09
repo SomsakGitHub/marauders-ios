@@ -21,9 +21,22 @@ public final class MapViewDIContainer {
     func makeSendLocationUseCase() -> SendLocationUseCaseProtocol {
         DefaultSendLocationUseCase(repo: makeMapRepository())
     }
+    
+    private func makeVideoRepository() -> VideoRepositoryProtocol {
+        MockVideoRepository()
+    }
+    
+    private func makePopularVideosUseCase() -> GetPopularVideosUseCaseProtocol {
+        GetPopularVideosUseCase(
+            repository: makeVideoRepository()
+        )
+    }
 
     // MARK: – Factory: ViewModel
     func makeMapViewModel() -> MapViewModel {
-        MapViewModel(sendLocationUseCase: makeSendLocationUseCase())
+        MapViewModel(
+            sendLocationUseCase: makeSendLocationUseCase(),
+            popularVideosUseCase: makePopularVideosUseCase()
+        )
     }
 }

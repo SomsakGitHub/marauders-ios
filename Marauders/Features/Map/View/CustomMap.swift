@@ -7,6 +7,9 @@ struct CustomMap: UIViewRepresentable {
     var onMapReady: () -> Void
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
+    
+    let videos: [VideoLocation]
+
 
     func makeUIView(context: Context) -> MKMapView {
 
@@ -27,8 +30,28 @@ struct CustomMap: UIViewRepresentable {
         return map
     }
 
-    func updateUIView(_ uiView: MKMapView, context: Context) {
+    func updateUIView(
+        _ mapView: MKMapView,
+        context: Context
+    ) {
 
+        let current = mapView.annotations.filter {
+            !($0 is MKUserLocation)
+        }
+
+        mapView.removeAnnotations(current)
+
+        let annotations = videos.map {
+
+            let annotation = MKPointAnnotation()
+
+            annotation.title = $0.title
+            annotation.coordinate = $0.coordinate
+
+            return annotation
+        }
+
+        mapView.addAnnotations(annotations)
     }
     
     func testSWiftLint() {

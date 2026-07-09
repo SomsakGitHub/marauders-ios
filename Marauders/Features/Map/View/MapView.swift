@@ -44,9 +44,14 @@ struct MapView: View {
 
     private var mapContent: some View {
         CustomMap(
+
             initialRegion: viewModel.region,
+
             onTap: viewModel.onUserTap,
-            onMapReady: viewModel.onMapReady
+            
+            onMapReady: viewModel.onMapReady,
+            
+            videos: viewModel.videos
         )
         .overlay {
             if !viewModel.isMapReady {

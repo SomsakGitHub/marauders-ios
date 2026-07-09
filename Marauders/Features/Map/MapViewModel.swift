@@ -12,17 +12,22 @@ final class MapViewModel: ObservableObject {
     @Published var isMapReady = false
     @Published var showOnboarding = true
     private var hasCenteredToUser = false
+    @Published var videos: [VideoLocation] = []
 
     private let locationService: LocationServiceProtocol
     private let sendLocationUseCase: SendLocationUseCaseProtocol
+    private let popularVideosUseCase: GetPopularVideosUseCaseProtocol
     private var cancellables = Set<AnyCancellable>()
 
     init(
         locationService: LocationServiceProtocol = LocationService(),
-        sendLocationUseCase: SendLocationUseCaseProtocol
+        sendLocationUseCase: SendLocationUseCaseProtocol,
+        popularVideosUseCase: GetPopularVideosUseCaseProtocol
     ) {
+
         self.locationService = locationService
         self.sendLocationUseCase = sendLocationUseCase
+        self.popularVideosUseCase = popularVideosUseCase
 
         // ✅ initial region เท่านั้น
         self.region = MKCoordinateRegion(
@@ -65,9 +70,28 @@ final class MapViewModel: ObservableObject {
 
     func onMapReady() {
         isMapReady = true
+        
+        loadPopularVideos()
     }
 
     func onUserTap(_ coord: CLLocationCoordinate2D) {
         selectedCoordinate = coord
+    }
+    
+    func loadPopularVideos() {
+
+        Task {
+
+            do {
+
+                videos = try await popularVideosUseCase.execute()
+
+            } catch {
+
+                print(error)
+            }
+
+        }
+
     }
 }
