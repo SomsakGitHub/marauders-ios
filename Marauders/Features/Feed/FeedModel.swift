@@ -21,20 +21,37 @@ struct VideoItem: Identifiable, Equatable {
 }
 
 struct FeedResponse: Decodable {
-    let data: [VideoDTO]
-    let page: Int
-    let pageSize: Int
-    let totalCount: Int
-    let totalPages: Int
-    let hasNext: Bool
-    let hasPrev: Bool
+    let videos: [VideoDTO]
+    let nextCursor: String?
 }
 
 struct VideoDTO: Decodable, Identifiable, Equatable {
+
     let id: String
-    let title: String
-    let description: String
-    let videoURL: URL
-    let thumbnailURL: String
-    let durationSeconds: Int
+    let userId: String
+    let status: String
+
+    let originalObjectKey: String
+    let playbackManifestUrl: URL
+
+    let durationMs: Int
+    let width: Int
+    let height: Int
+
+    let thumbnailUrl: URL
+
+    let createdAt: String
+    let updatedAt: String
+
+    let user: UserDTO
+
+    let likeCount: Int
+}
+
+struct UserDTO: Decodable, Equatable {
+
+    let id: String
+    let username: String
+    let displayName: String
+    let avatarUrl: URL?
 }

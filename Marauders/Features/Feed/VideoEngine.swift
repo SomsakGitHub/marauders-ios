@@ -87,7 +87,7 @@ final class VideoEngine: ObservableObject {
 
         queueItems.removeAll()
 
-        let current = AVPlayerItem(url: video.videoURL)
+        let current = AVPlayerItem(url: video.playbackManifestUrl)
         current.preferredForwardBufferDuration = 2
 
         player.insert(current, after: nil)
@@ -101,7 +101,7 @@ final class VideoEngine: ObservableObject {
 
         if queueItems[video.id] != nil { return }
 
-        let item = AVPlayerItem(url: video.videoURL)
+        let item = AVPlayerItem(url: video.playbackManifestUrl)
         item.preferredForwardBufferDuration = 2
 
         queueItems[video.id] = item
@@ -132,7 +132,7 @@ final class VideoEngine: ObservableObject {
 
         if let next = player.items().dropFirst().first,
            let asset = next.asset as? AVURLAsset,
-           asset.url == video.videoURL {
+           asset.url == video.playbackManifestUrl {
 
             player.advanceToNextItem()
 
@@ -140,7 +140,7 @@ final class VideoEngine: ObservableObject {
             // fallback
             player.removeAllItems()
 
-            let item = AVPlayerItem(url: video.videoURL)
+            let item = AVPlayerItem(url: video.playbackManifestUrl)
             player.insert(item, after: nil)
         }
 

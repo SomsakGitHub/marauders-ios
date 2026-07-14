@@ -1,7 +1,7 @@
 import Foundation
 
 protocol FeedRepositoryProtocol {
-    func fetchVideo() async throws -> FeedResponse
+    func fetchVideo(cursor: String?) async throws -> FeedResponse
 }
 
 final class FeedRepository: FeedRepositoryProtocol {
@@ -12,8 +12,8 @@ final class FeedRepository: FeedRepositoryProtocol {
         self.service = service
     }
     
-    func fetchVideo() async throws -> FeedResponse {
-        try await service.fetchVideo()
+    func fetchVideo(cursor: String?) async throws -> FeedResponse {
+        try await service.fetchVideo(cursor: cursor)
     }
 }
 

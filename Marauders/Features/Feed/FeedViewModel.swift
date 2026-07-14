@@ -41,6 +41,9 @@ final class FeedViewModel: ObservableObject {
     private var currentPlayingID: String?
     private var playStartTime: Date?
     private var lastIndex: Int?
+    
+    private var nextCursor: String?
+    private var hasMore = true
 
     init(
         fetchVideoUseCase: FetchVideoUseCaseProtocol,
@@ -62,14 +65,20 @@ final class FeedViewModel: ObservableObject {
 
     func loadNextPage() async {
         guard !isLoading else { return }
+        guard hasMore else { return }
+        
         isLoading = true
         defer { isLoading = false }
 
         page += 1
         
-        do {
-            let response = try await fetchVideoUseCase.execute()
-            videos.append(contentsOf: response.data)
+        do {            
+            let response = try await fetchVideoUseCase.execute(cursor: nextCursor)
+
+            videos.append(contentsOf: response.videos)
+
+            nextCursor = response.nextCursor
+            hasMore = response.nextCursor != nil
         } catch {
             print("❌ fetch video error:", error)
         }

@@ -13,12 +13,12 @@ enum LocationAPI: APIRequest {
     case fetchVideo
     case uploadVideo
 
-    var baseURL: URL { URL(string: "http://192.168.1.164:8080/v1/")! }
+    var baseURL: URL { URL(string: "https://marauders-api.khamthan02.workers.dev/")! }
 
     var path: String {
         switch self {
         case .updateLocation: return "location/update"
-        case .fetchVideo: return "videos/feed"
+        case .fetchVideo: return "/feed"
         case .uploadVideo: return "videos/upload"
         }
     }

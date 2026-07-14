@@ -1,5 +1,5 @@
 protocol FeedNetworkServiceProtocol {
-    func fetchVideo() async throws -> FeedResponse
+    func fetchVideo(cursor: String?) async throws -> FeedResponse
 }
 
 final class FeedNetworkService: FeedNetworkServiceProtocol {
@@ -9,7 +9,7 @@ final class FeedNetworkService: FeedNetworkServiceProtocol {
         self.client = client
     }
 
-    func fetchVideo() async throws -> FeedResponse {
+    func fetchVideo(cursor: String?) async throws -> FeedResponse {
         try await client.send(LocationAPI.fetchVideo)
     }
 }
