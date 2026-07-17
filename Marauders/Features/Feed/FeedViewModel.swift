@@ -31,6 +31,7 @@ final class FeedViewModel: ObservableObject {
     @Published var videos: [VideoDTO] = []
 
     private let fetchVideoUseCase: FetchVideoUseCaseProtocol
+    private let likeVideoUseCase: LikeVideoUseCaseProtocol
     private let videoEngine: VideoEngineProtocol
     private let analytics: AnalyticsProtocol
     
@@ -47,10 +48,12 @@ final class FeedViewModel: ObservableObject {
 
     init(
         fetchVideoUseCase: FetchVideoUseCaseProtocol,
+        likeVideoUseCase: LikeVideoUseCaseProtocol,
         videoEngine: VideoEngineProtocol = VideoEngine.shared,
         analytics: AnalyticsProtocol = AnalyticsManager.shared
     ) {
         self.fetchVideoUseCase = fetchVideoUseCase
+        self.likeVideoUseCase = likeVideoUseCase
         self.videoEngine = videoEngine
         self.analytics = analytics
         
@@ -106,5 +109,41 @@ final class FeedViewModel: ObservableObject {
         // preload ล่วงหน้า 2 ตัว
         videoEngine.preload(video: videos[safe: index + 1])
         videoEngine.preload(video: videos[safe: index + 2])
+    }
+
+    func toggleLike(for video: VideoDTO) {
+        guard let index = videos.firstIndex(where: { $0.id == video.id }) else { return }
+
+        let wasLiked = videos[index].isLiked
+        let newLikeCount = wasLiked ? videos[index].likeCount - 1 : videos[index].likeCount + 1
+
+        videos[index] = VideoDTO(
+            id: video.id,
+            userId: video.userId,
+            status: video.status,
+            originalObjectKey: video.originalObjectKey,
+            playbackManifestUrl: video.playbackManifestUrl,
+            durationMs: video.durationMs,
+            width: video.width,
+            height: video.height,
+            thumbnailUrl: video.thumbnailUrl,
+            createdAt: video.createdAt,
+            updatedAt: video.updatedAt,
+            user: video.user,
+            likeCount: newLikeCount,
+            isLiked: !wasLiked
+        )
+
+        Task {
+            do {
+                if wasLiked {
+                    try await likeVideoUseCase.unlike(videoId: video.id)
+                } else {
+                    try await likeVideoUseCase.like(videoId: video.id)
+                }
+            } catch {
+                videos[index] = video
+            }
+        }
     }
 }

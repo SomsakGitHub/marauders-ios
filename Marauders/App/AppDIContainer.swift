@@ -63,6 +63,10 @@ extension AppDIContainer {
     func makeFetchVideoUseCase() -> FetchVideoUseCaseProtocol {
         DefaultFetchVideoUseCase(repo: makeFeedRepository())
     }
+
+    func makeLikeVideoUseCase() -> LikeVideoUseCaseProtocol {
+        DefaultLikeVideoUseCase(repo: makeFeedRepository())
+    }
     
     func makeVideoPickerUseCase() -> VideoPickerUseCaseProtocol {
         DefaultVideoPickerUseCase(repo: makeVideoPickerRepository())
@@ -70,7 +74,10 @@ extension AppDIContainer {
 
     // MARK: – Factory: ViewModel
     func makeFeedViewModel() -> FeedViewModel {
-        FeedViewModel(fetchVideoUseCase: makeFetchVideoUseCase())
+        FeedViewModel(
+            fetchVideoUseCase: makeFetchVideoUseCase(),
+            likeVideoUseCase: makeLikeVideoUseCase()
+        )
     }
     
     func makeVideoPickerViewModel() -> VideoPickerViewModel {

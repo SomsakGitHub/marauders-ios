@@ -20,10 +20,33 @@ struct VideoCell: View {
 
     let video: VideoDTO
     let isActive: Bool
+    var onToggleLike: (() -> Void)?
 
     var body: some View {
-        PlayerLayerView(isActive: isActive)
-            .ignoresSafeArea()
+        ZStack(alignment: .bottomTrailing) {
+            PlayerLayerView(isActive: isActive)
+                .ignoresSafeArea()
+
+            VStack(spacing: 16) {
+                Button {
+                    onToggleLike?()
+                } label: {
+                    VStack(spacing: 4) {
+                        Image(systemName: video.isLiked ? "heart.fill" : "heart")
+                            .font(.system(size: 28))
+                            .foregroundStyle(video.isLiked ? .red : .white)
+                            .shadow(color: .black.opacity(0.3), radius: 4)
+
+                        Text("\(video.likeCount)")
+                            .font(.caption)
+                            .foregroundStyle(.white)
+                            .shadow(color: .black.opacity(0.3), radius: 4)
+                    }
+                }
+            }
+            .padding(.trailing, 16)
+            .padding(.bottom, 100)
+        }
     }
 }
 

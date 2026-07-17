@@ -12,21 +12,26 @@ enum LocationAPI: APIRequest {
     case updateLocation(LocationDTO)
     case fetchVideo
     case uploadVideo
+    case likeVideo(videoId: String)
+    case unlikeVideo(videoId: String)
 
     var baseURL: URL { URL(string: "https://marauders-api.khamthan02.workers.dev/")! }
 
     var path: String {
         switch self {
         case .updateLocation: return "location/update"
-        case .fetchVideo: return "/feeds"
+        case .fetchVideo: return "/feed"
         case .uploadVideo: return "videos/upload"
+        case .likeVideo(let videoId): return "/feeds/\(videoId)/like"
+        case .unlikeVideo(let videoId): return "/feeds/\(videoId)/like"
         }
     }
 
     var method: HTTPMethod {
         switch self {
-        case .updateLocation, .uploadVideo: return .post
+        case .updateLocation, .uploadVideo, .likeVideo: return .post
         case .fetchVideo: return .get
+        case .unlikeVideo: return .delete
         }
     }
 
@@ -41,6 +46,10 @@ enum LocationAPI: APIRequest {
         case .fetchVideo:
             return nil
         case .uploadVideo:
+            return nil
+        case .likeVideo:
+            return nil
+        case .unlikeVideo:
             return nil
         }
     }

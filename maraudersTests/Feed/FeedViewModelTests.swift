@@ -9,7 +9,8 @@ final class FeedViewModelTests: XCTestCase {
 
     func test_loadNextPage_appendsVideos() async {
         let useCase = MockFetchVideoUseCase()
-        let sut = FeedViewModel(fetchVideoUseCase: useCase)
+        let likeUseCase = MockLikeVideoUseCase()
+        let sut = FeedViewModel(fetchVideoUseCase: useCase, likeVideoUseCase: likeUseCase)
 
         await sut.loadNextPage()
 
@@ -19,7 +20,8 @@ final class FeedViewModelTests: XCTestCase {
 
     func test_loadNextPage_multipleCalls_appendsMoreVideos() async {
         let useCase = MockFetchVideoUseCase()
-        let sut = FeedViewModel(fetchVideoUseCase: useCase)
+        let likeUseCase = MockLikeVideoUseCase()
+        let sut = FeedViewModel(fetchVideoUseCase: useCase, likeVideoUseCase: likeUseCase)
 
         await sut.loadNextPage()
         await sut.loadNextPage()
@@ -32,9 +34,10 @@ final class FeedViewModelTests: XCTestCase {
 
     func test_loadNextPage_whileLoading_shouldNotDuplicateCall() async {
         let useCase = MockFetchVideoUseCase()
+        let likeUseCase = MockLikeVideoUseCase()
         useCase.delay = 200_000_000
 
-        let sut = FeedViewModel(fetchVideoUseCase: useCase)
+        let sut = FeedViewModel(fetchVideoUseCase: useCase, likeVideoUseCase: likeUseCase)
 
         async let first = sut.loadNextPage()
         async let second = sut.loadNextPage()
@@ -48,7 +51,8 @@ final class FeedViewModelTests: XCTestCase {
 
     func test_loadNextPage_respectsMaxCache() async {
         let useCase = MockFetchVideoUseCase()
-        let sut = FeedViewModel(fetchVideoUseCase: useCase)
+        let likeUseCase = MockLikeVideoUseCase()
+        let sut = FeedViewModel(fetchVideoUseCase: useCase, likeVideoUseCase: likeUseCase)
 
         for _ in 0..<20 {
             await sut.loadNextPage()
@@ -60,7 +64,8 @@ final class FeedViewModelTests: XCTestCase {
     func test_didFocusVideo_triggersPagination() async {
 
         let useCase = MockFetchVideoUseCase()
-        let viewModel = FeedViewModel(fetchVideoUseCase: useCase)
+        let likeUseCase = MockLikeVideoUseCase()
+        let viewModel = FeedViewModel(fetchVideoUseCase: useCase, likeVideoUseCase: likeUseCase)
 
         await viewModel.loadNextPage()
 
@@ -73,9 +78,11 @@ final class FeedViewModelTests: XCTestCase {
     
     func test_didFocusVideo_preloadPrevious_whenScrollUp() async {
         let useCase = MockFetchVideoUseCase()
+        let likeUseCase = MockLikeVideoUseCase()
         let videoEngine = MockVideoEngine()
         let viewModel = FeedViewModel(
             fetchVideoUseCase: useCase,
+            likeVideoUseCase: likeUseCase,
             videoEngine: videoEngine
         )
 
@@ -86,6 +93,30 @@ final class FeedViewModelTests: XCTestCase {
         viewModel.didFocusVideo(id: videos[0].id) // ขึ้น
 
         XCTAssertEqual(videoEngine.preloadedVideo?.id, videos[safe: -1]?.id)
+    }
+
+    // MARK: - Like
+
+    func test_toggleLike_togglesIsLikedAndLikeCount() async {
+        let useCase = MockFetchVideoUseCase()
+        let likeUseCase = MockLikeVideoUseCase()
+        let viewModel = FeedViewModel(fetchVideoUseCase: useCase, likeVideoUseCase: likeUseCase)
+
+        await viewModel.loadNextPage()
+
+        let video = viewModel.videos[0]
+        let originalLikeCount = video.likeCount
+        XCTAssertFalse(video.isLiked)
+
+        viewModel.toggleLike(for: video)
+
+        XCTAssertTrue(viewModel.videos[0].isLiked)
+        XCTAssertEqual(viewModel.videos[0].likeCount, originalLikeCount + 1)
+
+        viewModel.toggleLike(for: viewModel.videos[0])
+
+        XCTAssertFalse(viewModel.videos[0].isLiked)
+        XCTAssertEqual(viewModel.videos[0].likeCount, originalLikeCount)
     }
 }
 
@@ -113,6 +144,21 @@ final class MockFetchVideoUseCase: FetchVideoUseCaseProtocol {
     }
 }
 
+@MainActor
+final class MockLikeVideoUseCase: LikeVideoUseCaseProtocol {
+
+    private(set) var likeCallCount = 0
+    private(set) var unlikeCallCount = 0
+
+    func like(videoId: String) async throws {
+        likeCallCount += 1
+    }
+
+    func unlike(videoId: String) async throws {
+        unlikeCallCount += 1
+    }
+}
+
 final class MockVideoEngine: VideoEngineProtocol {
 
     var state: PlaybackState = .idle
@@ -123,6 +169,9 @@ final class MockVideoEngine: VideoEngineProtocol {
 
     func play(video: VideoDTO) {
         playedVideo = video
+    }
+
+    func playNext(video: VideoDTO) {
     }
 
     func preload(video: VideoDTO?) {

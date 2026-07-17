@@ -22,7 +22,9 @@ struct FeedView: View {
         ScrollView(.vertical) {
             LazyVStack(spacing: 0) {
                 ForEach(viewModel.videos) { video in
-                    VideoCell(video: video, isActive: selectedTab == 0)
+                    VideoCell(video: video, isActive: selectedTab == 0, onToggleLike: {
+                        viewModel.toggleLike(for: video)
+                    })
                         .containerRelativeFrame(.vertical)
                         .id(video.id)
                 }
