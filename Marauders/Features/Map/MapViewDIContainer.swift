@@ -5,7 +5,7 @@ public final class MapViewDIContainer {
 
     // MARK: – Factory: Network
     private func makeNetworkClient() -> NetworkClientProtocol {
-        NetworkClient()
+        RetryNetworkClient(delegate: NetworkClient(), maxRetries: 3, baseDelay: 1.0)
     }
 
     private func makeLocationNetworkService() -> LocationNetworkServiceProtocol {

@@ -18,7 +18,7 @@ enum LocationAPI: APIRequest {
     var path: String {
         switch self {
         case .updateLocation: return "location/update"
-        case .fetchVideo: return "/feed"
+        case .fetchVideo: return "/feeds"
         case .uploadVideo: return "videos/upload"
         }
     }
